@@ -32,6 +32,9 @@ export { ECKeyParameters } from './crypto/params/ECKeyParameters';
 export { ECPublicKeyParameters } from './crypto/params/ECPublicKeyParameters';
 export { ECPrivateKeyParameters } from './crypto/params/ECPrivateKeyParameters';
 export { ParametersWithRandom } from './crypto/params/ParametersWithRandom';
+export { ParametersWithID } from './crypto/params/ParametersWithID';
+export { SM2KeyExchangePrivateParameters } from './crypto/params/SM2KeyExchangePrivateParameters';
+export { SM2KeyExchangePublicParameters } from './crypto/params/SM2KeyExchangePublicParameters';
 
 // KDF
 export { KDF } from './crypto/kdf/KDF';
@@ -44,6 +47,9 @@ export { SM2Engine, SM2Mode } from './crypto/engines/SM2Engine';
 
 // 签名器
 export { SM2Signer } from './crypto/signers/SM2Signer';
+
+// 密钥交换
+export { SM2KeyExchange } from './crypto/agreement/SM2KeyExchange';
 
 // 异常
 export { CryptoException } from './exceptions/CryptoException';
