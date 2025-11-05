@@ -1,7 +1,7 @@
 {
   "name": "sm-js-bc",
-  "version": "0.2.0",
-  "description": "SM2/SM3 implementation in TypeScript based on Bouncy Castle Java",
+  "version": "0.3.0",
+  "description": "SM2/SM3/SM4 implementation in TypeScript based on Bouncy Castle Java",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,10 +32,13 @@
   "keywords": [
     "sm2",
     "sm3",
+    "sm4",
     "cryptography",
     "chinese-cryptography",
     "gm",
     "elliptic-curve",
+    "block-cipher",
+    "symmetric-encryption",
     "bouncy-castle",
     "typescript"
   ],
