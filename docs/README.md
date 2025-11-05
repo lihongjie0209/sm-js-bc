@@ -73,7 +73,29 @@
   - 调试技巧
 - **测试覆盖率目标**
 
-### 5. [快速开始指南](./getting-started.md) ⭐
+### 5. [API 一致性审计报告](./API_CONSISTENCY_AUDIT.md) 🔍 **NEW!**
+- **总体评估**
+  - 整体一致性：良好 (91%)
+  - 核心功能完整性：100%
+- **详细差异与修改建议**
+  - SM3Digest、SM2Engine、SM4Engine 接口对比
+  - SM2Signer、SM2KeyExchange 接口对比
+  - 参数类、异常类、工具类对比
+- **类型映射总结**
+- **接口一致性评分**
+- **总结建议**
+
+### 6. [API 改进文档](./API_IMPROVEMENTS.md) ✨ **NEW!**
+- **v0.3.1 版本 API 改进**
+  - SM3Digest.reset(Memoable) 方法重载
+  - SM2Engine.Mode 静态别名
+  - SM2Signer 扩展性方法
+- **使用示例和迁移指南**
+- **向后兼容性说明**
+- **测试验证**
+- **版本历史**
+
+### 7. [快速开始指南](./getting-started.md) ⭐
 - **环境准备**
   - Node.js, TypeScript 配置
   - Java + GraalVM 配置（互操作测试用）
