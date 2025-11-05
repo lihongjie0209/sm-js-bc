@@ -45,46 +45,98 @@ digest.doFinal(hash, 0);
 console.log('SM3 Hash:', Buffer.from(hash).toString('hex'));
 ```
 
+### SM2 密钥对生成
+
+```typescript
+import { SM2 } from 'sm-js-bc';
+
+// 生成密钥对
+const keyPair = SM2.generateKeyPair();
+
+console.log('Private key:', keyPair.privateKey.toString(16));
+console.log('Public key X:', keyPair.publicKey.x.toString(16));
+console.log('Public key Y:', keyPair.publicKey.y.toString(16));
+```
+
 ### SM2 数字签名
 
 ```typescript
-import { SM2Signer } from 'sm-js-bc';
+import { SM2 } from 'sm-js-bc';
 
-// 生成密钥对（示例）
-const keyPair = generateKeyPair(); // 实现细节见文档
+// 生成密钥对
+const keyPair = SM2.generateKeyPair();
 
 // 签名
-const signer = new SM2Signer();
-signer.init(true, keyPair.privateKey);
-const message = new TextEncoder().encode('Hello, SM2!');
-signer.update(message, 0, message.length);
-const signature = signer.generateSignature();
+const message = 'Hello, SM2!';
+const signature = SM2.sign(message, keyPair.privateKey);
+console.log('Signature:', Buffer.from(signature).toString('hex'));
 
 // 验签
-const verifier = new SM2Signer();
-verifier.init(false, keyPair.publicKey);
-verifier.update(message, 0, message.length);
-const isValid = verifier.verifySignature(signature);
-
+const isValid = SM2.verify(
+  message, 
+  signature, 
+  keyPair.publicKey
+);
 console.log('Signature valid:', isValid);
 ```
 
 ### SM2 公钥加密
 
 ```typescript
-import { SM2Engine } from 'sm-js-bc';
+import { SM2 } from 'sm-js-bc';
+
+// 生成密钥对
+const keyPair = SM2.generateKeyPair();
 
 // 加密
-const engine = new SM2Engine();
-engine.init(true, publicKeyParams);
 const plaintext = new TextEncoder().encode('Secret message');
-const ciphertext = engine.processBlock(plaintext, 0, plaintext.length);
+const ciphertext = SM2.encrypt(plaintext, keyPair.publicKey);
+console.log('Ciphertext:', Buffer.from(ciphertext).toString('hex'));
 
 // 解密
-engine.init(false, privateKeyParams);
-const decrypted = engine.processBlock(ciphertext, 0, ciphertext.length);
-
+const decrypted = SM2.decrypt(ciphertext, keyPair.privateKey);
 console.log('Decrypted:', new TextDecoder().decode(decrypted));
+```
+
+### SM2 密钥交换
+
+```typescript
+import { SM2KeyExchange } from 'sm-js-bc';
+
+// 初始方（Alice）
+const aliceStatic = SM2.generateKeyPair();
+const aliceExchange = new SM2KeyExchange();
+aliceExchange.init(aliceStatic.privateKey);
+
+const aliceEphemeral = aliceExchange.generateEphemeralKeyPair();
+
+// 响应方（Bob）
+const bobStatic = SM2.generateKeyPair();
+const bobExchange = new SM2KeyExchange();
+bobExchange.init(bobStatic.privateKey);
+
+const bobEphemeral = bobExchange.generateEphemeralKeyPair();
+
+// Alice 计算共享密钥
+const aliceSharedKey = aliceExchange.calculateKey(
+  16,  // 密钥长度
+  bobStatic.publicKey,
+  bobEphemeral.publicKey,
+  true  // initiator
+);
+
+// Bob 计算共享密钥
+const bobSharedKey = bobExchange.calculateKey(
+  16,  // 密钥长度
+  aliceStatic.publicKey,
+  aliceEphemeral.publicKey,
+  false  // responder
+);
+
+// 双方得到相同的共享密钥
+console.log('Keys match:', 
+  Buffer.from(aliceSharedKey).equals(Buffer.from(bobSharedKey))
+);
 ```
 
 ## 📖 文档
@@ -278,20 +330,6 @@ refactor: 重构
 perf: 性能优化
 chore: 构建/工具相关
 ```
-
-## 📋 实现进度
-
-- [x] 项目规划和文档
-- [ ] Phase 1: 基础设施（第 1-2 周）
-- [ ] Phase 2: SM3 实现（第 3 周）
-- [ ] Phase 3: 椭圆曲线基础（第 4-5 周）
-- [ ] Phase 4: SM2 签名（第 6 周）
-- [ ] Phase 5: SM2 加密（第 7 周）
-- [ ] Phase 6: SM2 密钥交换（第 8 周）
-- [ ] Phase 7: GraalVM 互操作测试（第 9 周）
-- [ ] Phase 8: 完善与发布（第 10 周）
-
-详细进度请查看 [实现计划](./docs/implementation-plan.md)。
 
 ## 🤝 贡献
 
