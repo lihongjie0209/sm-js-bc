@@ -37,6 +37,9 @@ export enum SM2Mode {
 }
 
 export class SM2Engine {
+  // Alias for compatibility with Bouncy Castle Java API
+  static Mode = SM2Mode;
+
   private readonly digest: SM3Digest;
   private readonly mode: SM2Mode;
 

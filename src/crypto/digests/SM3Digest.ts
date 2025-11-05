@@ -74,9 +74,15 @@ export class SM3Digest extends GeneralDigest {
     return SM3Digest.DIGEST_LENGTH;
   }
 
-  public reset(): void {
-    super.reset();
-    this.resetState();
+  public reset(): void;
+  public reset(other: Memoable): void;
+  public reset(other?: Memoable): void {
+    if (other !== undefined) {
+      this.resetFromMemoable(other);
+    } else {
+      super.reset();
+      this.resetState();
+    }
   }
 
   protected resetState(): void {
