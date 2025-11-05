@@ -375,7 +375,9 @@ export class SM2Signer implements Signer {
 
   /**
    * Convert hash bytes to integer in range [1, n-1].
-   * @deprecated Use calculateE instead for compatibility with Bouncy Castle Java API
+   * @deprecated Since v0.3.1. Use calculateE(n, message) instead for compatibility with Bouncy Castle Java API.
+   *             This private method is kept for internal backward compatibility and will be removed in v1.0.0.
+   * @internal
    */
   private hashToInteger(hash: Uint8Array, n: bigint): bigint {
     return this.calculateE(n, hash);
