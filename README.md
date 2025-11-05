@@ -21,7 +21,7 @@
 ## 📦 安装
 
 ```bash
-npm install sm-js-bc
+npm install sm-bc
 ```
 
 ## 🚀 快速开始
@@ -29,7 +29,7 @@ npm install sm-js-bc
 ### SM3 哈希
 
 ```typescript
-import { SM3Digest } from 'sm-js-bc';
+import { SM3Digest } from 'sm-bc';
 
 // 创建 SM3 摘要实例
 const digest = new SM3Digest();
@@ -48,7 +48,7 @@ console.log('SM3 Hash:', Buffer.from(hash).toString('hex'));
 ### SM2 密钥对生成
 
 ```typescript
-import { SM2 } from 'sm-js-bc';
+import { SM2 } from 'sm-bc';
 
 // 生成密钥对
 const keyPair = SM2.generateKeyPair();
@@ -61,7 +61,7 @@ console.log('Public key Y:', keyPair.publicKey.y.toString(16));
 ### SM2 数字签名
 
 ```typescript
-import { SM2 } from 'sm-js-bc';
+import { SM2 } from 'sm-bc';
 
 // 生成密钥对
 const keyPair = SM2.generateKeyPair();
@@ -83,7 +83,7 @@ console.log('Signature valid:', isValid);
 ### SM2 公钥加密
 
 ```typescript
-import { SM2 } from 'sm-js-bc';
+import { SM2 } from 'sm-bc';
 
 // 生成密钥对
 const keyPair = SM2.generateKeyPair();
@@ -101,42 +101,191 @@ console.log('Decrypted:', new TextDecoder().decode(decrypted));
 ### SM2 密钥交换
 
 ```typescript
-import { SM2KeyExchange } from 'sm-js-bc';
+import { 
+  SM2, 
+  SM2KeyExchange,
+  SM2KeyExchangePrivateParameters,
+  SM2KeyExchangePublicParameters,
+  ParametersWithID,
+  ECPrivateKeyParameters,
+  ECPublicKeyParameters
+} from 'sm-bc';
 
-// 初始方（Alice）
-const aliceStatic = SM2.generateKeyPair();
+// 生成静态密钥对和临时密钥对
+const aliceStaticKeyPair = SM2.generateKeyPair();
+const aliceEphemeralKeyPair = SM2.generateKeyPair();
+const bobStaticKeyPair = SM2.generateKeyPair();
+const bobEphemeralKeyPair = SM2.generateKeyPair();
+
+// 获取域参数
+const domainParams = SM2.getParameters();
+
+// 创建密钥参数对象
+const curve = SM2.getCurve();
+const aliceStaticPub = new ECPublicKeyParameters(
+  curve.createPoint(aliceStaticKeyPair.publicKey.x, aliceStaticKeyPair.publicKey.y),
+  domainParams
+);
+const aliceStaticPriv = new ECPrivateKeyParameters(aliceStaticKeyPair.privateKey, domainParams);
+const aliceEphemeralPub = new ECPublicKeyParameters(
+  curve.createPoint(aliceEphemeralKeyPair.publicKey.x, aliceEphemeralKeyPair.publicKey.y),
+  domainParams
+);
+const aliceEphemeralPriv = new ECPrivateKeyParameters(aliceEphemeralKeyPair.privateKey, domainParams);
+
+const bobStaticPub = new ECPublicKeyParameters(
+  curve.createPoint(bobStaticKeyPair.publicKey.x, bobStaticKeyPair.publicKey.y),
+  domainParams
+);
+const bobStaticPriv = new ECPrivateKeyParameters(bobStaticKeyPair.privateKey, domainParams);
+const bobEphemeralPub = new ECPublicKeyParameters(
+  curve.createPoint(bobEphemeralKeyPair.publicKey.x, bobEphemeralKeyPair.publicKey.y),
+  domainParams
+);
+const bobEphemeralPriv = new ECPrivateKeyParameters(bobEphemeralKeyPair.privateKey, domainParams);
+
+// Alice（初始方）计算共享密钥
 const aliceExchange = new SM2KeyExchange();
-aliceExchange.init(aliceStatic.privateKey);
+const aliceUserID = new TextEncoder().encode('alice@example.com');
+const alicePrivParams = new SM2KeyExchangePrivateParameters(
+  true,  // 初始方
+  aliceStaticPriv,
+  aliceEphemeralPriv
+);
+aliceExchange.init(new ParametersWithID(alicePrivParams, aliceUserID));
 
-const aliceEphemeral = aliceExchange.generateEphemeralKeyPair();
-
-// 响应方（Bob）
-const bobStatic = SM2.generateKeyPair();
-const bobExchange = new SM2KeyExchange();
-bobExchange.init(bobStatic.privateKey);
-
-const bobEphemeral = bobExchange.generateEphemeralKeyPair();
-
-// Alice 计算共享密钥
+const bobUserID = new TextEncoder().encode('bob@example.com');
+const bobPubParams = new SM2KeyExchangePublicParameters(bobStaticPub, bobEphemeralPub);
 const aliceSharedKey = aliceExchange.calculateKey(
-  16,  // 密钥长度
-  bobStatic.publicKey,
-  bobEphemeral.publicKey,
-  true  // initiator
+  128,  // 密钥长度（bits）
+  new ParametersWithID(bobPubParams, bobUserID)
 );
 
-// Bob 计算共享密钥
+// Bob（响应方）计算共享密钥
+const bobExchange = new SM2KeyExchange();
+const bobPrivParams = new SM2KeyExchangePrivateParameters(
+  false,  // 响应方
+  bobStaticPriv,
+  bobEphemeralPriv
+);
+bobExchange.init(new ParametersWithID(bobPrivParams, bobUserID));
+
+const alicePubParams = new SM2KeyExchangePublicParameters(aliceStaticPub, aliceEphemeralPub);
 const bobSharedKey = bobExchange.calculateKey(
-  16,  // 密钥长度
-  aliceStatic.publicKey,
-  aliceEphemeral.publicKey,
-  false  // responder
+  128,  // 密钥长度（bits）
+  new ParametersWithID(alicePubParams, aliceUserID)
 );
 
-// 双方得到相同的共享密钥
+// 验证双方得到相同的共享密钥
 console.log('Keys match:', 
   Buffer.from(aliceSharedKey).equals(Buffer.from(bobSharedKey))
 );
+console.log('Shared key:', Buffer.from(aliceSharedKey).toString('hex'));
+```
+
+**注意**：SM2 密钥交换协议较为复杂，需要使用多个参数类。如果您只需要简单的密钥协商，建议使用 ECDH 或其他更简单的协议。
+
+## 📚 API 参考
+
+### SM3Digest
+
+```typescript
+class SM3Digest {
+  // 创建 SM3 摘要实例
+  constructor();
+  
+  // 更新摘要数据
+  update(input: Uint8Array, offset: number, len: number): void;
+  
+  // 完成摘要计算并返回结果
+  doFinal(out: Uint8Array, outOff: number): number;
+  
+  // 获取摘要输出大小（32 字节）
+  getDigestSize(): number;
+  
+  // 重置摘要状态以供重用
+  reset(): void;
+}
+```
+
+### SM2
+
+```typescript
+class SM2 {
+  // 生成 SM2 密钥对
+  static generateKeyPair(): {
+    privateKey: bigint;
+    publicKey: { x: bigint; y: bigint };
+  };
+  
+  // 使用私钥签名消息
+  static sign(
+    message: string | Uint8Array,
+    privateKey: bigint
+  ): Uint8Array;
+  
+  // 使用公钥验证签名
+  static verify(
+    message: string | Uint8Array,
+    signature: Uint8Array,
+    publicKey: { x: bigint; y: bigint }
+  ): boolean;
+  
+  // 使用公钥加密数据
+  static encrypt(
+    message: string | Uint8Array,
+    publicKey: { x: bigint; y: bigint }
+  ): Uint8Array;
+  
+  // 使用私钥解密数据
+  static decrypt(
+    ciphertext: Uint8Array,
+    privateKey: bigint
+  ): Uint8Array;
+  
+  // 获取 SM2 曲线参数
+  static getParameters(): ECDomainParameters;
+  static getCurve(): ECCurveFp;
+  static getG(): ECPoint;
+  static getN(): bigint;
+  
+  // 验证密钥有效性
+  static validatePrivateKey(d: bigint): boolean;
+  static validatePublicKey(Q: ECPoint): boolean;
+}
+```
+
+### SM2KeyExchange
+
+```typescript
+class SM2KeyExchange {
+  // 创建密钥交换实例
+  constructor(digest?: Digest);
+  
+  // 初始化密钥交换（需要 SM2KeyExchangePrivateParameters）
+  init(privParam: CipherParameters): void;
+  
+  // 计算共享密钥
+  calculateKey(
+    kLen: number,  // 密钥长度（bits）
+    pubParam: CipherParameters  // 对方公钥参数
+  ): Uint8Array;
+  
+  // 带确认标签的密钥计算
+  calculateKeyWithConfirmation(
+    kLen: number,
+    confirmationTag: Uint8Array | null,
+    pubParam: CipherParameters
+  ): Uint8Array[];
+}
+```
+
+### 异常类
+
+```typescript
+class CryptoException extends Error {}
+class DataLengthException extends CryptoException {}
+class InvalidCipherTextException extends CryptoException {}
 ```
 
 ## 📖 文档
@@ -363,26 +512,148 @@ chore: 构建/工具相关
 - Bouncy Castle 项目提供了优秀的参考实现
 - 所有为国密算法标准化做出贡献的专家学者
 
-## ❓ 常见问题
+## 🌐 浏览器与 Node.js 使用
 
-### 为什么要实现这个库？
+### Node.js
+
+```typescript
+import { SM2, SM3Digest } from 'sm-bc';
+// 直接使用，TextEncoder 和 Buffer 都是内置的
+```
+
+### 浏览器（ES Module）
+
+```html
+<script type="module">
+  import { SM2, SM3Digest } from './node_modules/sm-bc/dist/index.mjs';
+  
+  // 使用 TextEncoder（浏览器内置）
+  const data = new TextEncoder().encode('Hello');
+  
+  // 注意：浏览器中没有 Buffer，使用 Uint8Array
+  const hash = new Uint8Array(32);
+  // 转换为十六进制字符串
+  const hexString = Array.from(hash)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+</script>
+```
+
+### 浏览器（通过 CDN）
+
+```html
+<script src="https://unpkg.com/sm-bc/dist/index.js"></script>
+<script>
+  // 全局变量访问
+  const { SM2, SM3Digest } = window.smbc;
+</script>
+```
+
+### 使用打包工具
+
+支持 Webpack、Rollup、Vite 等现代打包工具：
+
+```typescript
+// Vite / Webpack / Rollup
+import { SM2, SM3Digest } from 'sm-bc';
+```
+
+## ❓ 常见问题与技巧
+
+### Q: 为什么要实现这个库？
 
 为了在 JavaScript/TypeScript 生态中提供一个与 Bouncy Castle Java 完全兼容的 SM2/SM3 实现，确保跨语言互操作性。
 
-### 与其他 JavaScript SM2/SM3 库的区别？
+### Q: 与其他 JavaScript SM2/SM3 库的区别？
 
 - ✅ 基于 Bouncy Castle Java 一比一复刻，保证兼容性
 - ✅ 通过 GraalVM 跨语言测试验证互操作性
 - ✅ 零运行时依赖，纯 TypeScript 实现
 - ✅ 完整的类型定义和文档
 
-### 性能如何？
+### Q: 如何处理大文件的哈希计算？
+
+```typescript
+import { SM3Digest } from 'sm-bc';
+import * as fs from 'fs';
+
+const digest = new SM3Digest();
+const stream = fs.createReadStream('large-file.bin');
+
+stream.on('data', (chunk) => {
+  digest.update(chunk, 0, chunk.length);
+});
+
+stream.on('end', () => {
+  const hash = new Uint8Array(digest.getDigestSize());
+  digest.doFinal(hash, 0);
+  console.log('Hash:', Buffer.from(hash).toString('hex'));
+});
+```
+
+### Q: 如何导入/导出密钥？
+
+```typescript
+import { SM2 } from 'sm-bc';
+
+// 生成密钥对
+const keyPair = SM2.generateKeyPair();
+
+// 导出密钥（保存为十六进制字符串）
+const privateKeyHex = keyPair.privateKey.toString(16);
+const publicKeyHex = {
+  x: keyPair.publicKey.x.toString(16),
+  y: keyPair.publicKey.y.toString(16)
+};
+
+// 导入密钥（从十六进制字符串）
+const importedPrivateKey = BigInt('0x' + privateKeyHex);
+const importedPublicKey = {
+  x: BigInt('0x' + publicKeyHex.x),
+  y: BigInt('0x' + publicKeyHex.y)
+};
+
+// 使用导入的密钥
+const message = 'test';
+const signature = SM2.sign(message, importedPrivateKey);
+const valid = SM2.verify(message, signature, importedPublicKey);
+```
+
+### Q: 如何处理错误？
+
+```typescript
+import { SM2, CryptoException, InvalidCipherTextException } from 'sm-bc';
+
+try {
+  const keyPair = SM2.generateKeyPair();
+  const encrypted = SM2.encrypt('message', keyPair.publicKey);
+  const decrypted = SM2.decrypt(encrypted, keyPair.privateKey);
+} catch (error) {
+  if (error instanceof InvalidCipherTextException) {
+    console.error('解密失败：密文无效或密钥不匹配');
+  } else if (error instanceof CryptoException) {
+    console.error('加密操作失败：', error.message);
+  } else {
+    console.error('未知错误：', error);
+  }
+}
+```
+
+### Q: 性能如何？
 
 JavaScript 引擎（V8/Node.js）的性能已经非常接近 JVM。对于加密算法这类计算密集型任务，性能差异在可接受范围内，通常在同一数量级。
 
-### 可以在生产环境使用吗？
+### Q: 可以在生产环境使用吗？
 
 项目目前处于开发阶段。建议等到 v1.0.0 正式版发布并经过充分测试后再用于生产环境。
+
+### 💡 使用技巧
+
+1. **重用 Digest 实例**：如果需要计算多个哈希，可以调用 `digest.reset()` 重置状态后重用
+2. **密钥验证**：使用 `SM2.validatePrivateKey()` 和 `SM2.validatePublicKey()` 验证密钥有效性
+3. **随机数生成**：库内部使用加密安全的随机数生成器，无需额外配置
+4. **错误处理**：始终使用 try-catch 包裹加密操作，处理可能的异常
+5. **类型安全**：使用 TypeScript 以获得完整的类型检查和 IDE 提示
 
 ---
 
