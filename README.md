@@ -6,9 +6,13 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 
-一比一复刻 [Bouncy Castle Java](https://github.com/bcgit/bc-java) 的 SM2 和 SM3 算法的 TypeScript 实现。
+一比一复刻 [Bouncy Castle Java](https://github.com/bcgit/bc-java) 的 SM2、SM3 和 SM4 算法的 TypeScript 实现。
 
 ## ✨ 特性
+
+- 🔐 **SM2** - 椭圆曲线公钥密码算法（数字签名、公钥加密、密钥交换）
+- 🔒 **SM3** - 密码杂凑算法（256位消息摘要）
+- 🔑 **SM4** - 分组密码算法（128位对称加密）
 
 - 🎯 **零运行时依赖** - 纯 TypeScript 实现
 - 🔒 **完全兼容** - 与 Bouncy Castle Java 完全互操作
@@ -26,77 +30,96 @@ npm install sm-js-bc
 
 ## 🚀 快速开始
 
+> 💡 **提示**: 以下是基础用法示例。想要完整的可运行代码？直接跳转到 [📚 完整示例](#-完整示例) 章节，所有示例都可以直接运行！
+
+以下代码片段展示了各算法的基本用法：
+
 ### SM3 哈希
 
 ```typescript
 import { SM3Digest } from 'sm-js-bc';
 
-// 创建 SM3 摘要实例
 const digest = new SM3Digest();
-
-// 更新数据
 const data = new TextEncoder().encode('Hello, SM3!');
 digest.update(data, 0, data.length);
 
-// 获取哈希值
 const hash = new Uint8Array(digest.getDigestSize());
 digest.doFinal(hash, 0);
 
 console.log('SM3 Hash:', Buffer.from(hash).toString('hex'));
 ```
 
+📖 **完整示例**: [example/sm3-hash.mjs](./example/sm3-hash.mjs)
+
 ### SM2 密钥对生成
 
 ```typescript
 import { SM2 } from 'sm-js-bc';
 
-// 生成密钥对
 const keyPair = SM2.generateKeyPair();
-
 console.log('Private key:', keyPair.privateKey.toString(16));
 console.log('Public key X:', keyPair.publicKey.x.toString(16));
 console.log('Public key Y:', keyPair.publicKey.y.toString(16));
 ```
+
+📖 **完整示例**: [example/sm2-keypair.mjs](./example/sm2-keypair.mjs)
 
 ### SM2 数字签名
 
 ```typescript
 import { SM2 } from 'sm-js-bc';
 
-// 生成密钥对
 const keyPair = SM2.generateKeyPair();
 
 // 签名
 const message = 'Hello, SM2!';
 const signature = SM2.sign(message, keyPair.privateKey);
-console.log('Signature:', Buffer.from(signature).toString('hex'));
 
 // 验签
-const isValid = SM2.verify(
-  message, 
-  signature, 
-  keyPair.publicKey
-);
+const isValid = SM2.verify(message, signature, keyPair.publicKey);
 console.log('Signature valid:', isValid);
 ```
+
+📖 **完整示例**: [example/sm2-sign.mjs](./example/sm2-sign.mjs)
 
 ### SM2 公钥加密
 
 ```typescript
 import { SM2 } from 'sm-js-bc';
 
-// 生成密钥对
 const keyPair = SM2.generateKeyPair();
 
 // 加密
 const plaintext = new TextEncoder().encode('Secret message');
 const ciphertext = SM2.encrypt(plaintext, keyPair.publicKey);
-console.log('Ciphertext:', Buffer.from(ciphertext).toString('hex'));
 
 // 解密
 const decrypted = SM2.decrypt(ciphertext, keyPair.privateKey);
 console.log('Decrypted:', new TextDecoder().decode(decrypted));
 ```
+
+📖 **完整示例**: [example/sm2-encrypt.mjs](./example/sm2-encrypt.mjs)
+
+### SM4 对称加密
+
+```typescript
+import { SM4 } from 'sm-js-bc';
+
+// 生成密钥并加密
+const key = SM4.generateKey();
+const plaintext = new TextEncoder().encode('Hello, SM4!');
+const ciphertext = SM4.encrypt(plaintext, key);
+
+// 解密
+const decrypted = SM4.decrypt(ciphertext, key);
+console.log('Decrypted:', new TextDecoder().decode(decrypted));
+```
+
+> ⚠️ **安全提示**: 上述示例使用 ECB 模式，仅用于演示。生产环境请使用 CBC、CTR 或 GCM 模式。
+
+📖 **完整示例**: 
+- [example/sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) - 基础加密示例
+- [example/sm4-modes.mjs](./example/sm4-modes.mjs) - 多种工作模式（ECB/CBC/CTR/GCM）
 
 ### SM2 密钥交换
 
@@ -176,11 +199,27 @@ console.log('Keys match:',
 );
 ```
 
-> **注意**: SM2 密钥交换是一个高级功能，需要使用专门的参数类。完整示例请查看 [example/sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs)
+> 💡 **提示**: SM2 密钥交换涉及多个参数类和步骤，建议查看完整示例了解详细用法。
 
-## � 示例代码
+📖 **完整示例**: [example/sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs)
 
-所有上述示例代码都可以在 [example](./example) 目录中找到完整的可运行版本：
+---
+
+## 📚 完整示例
+
+所有算法都提供了完整的可运行示例，位于 [`example`](./example) 目录：
+
+| 示例文件 | 说明 | 演示内容 |
+|---------|------|---------|
+| [sm3-hash.mjs](./example/sm3-hash.mjs) | SM3 哈希计算 | 基本哈希、分段更新、空数据处理 |
+| [sm2-keypair.mjs](./example/sm2-keypair.mjs) | SM2 密钥对生成 | 生成密钥对、查看公私钥 |
+| [sm2-sign.mjs](./example/sm2-sign.mjs) | SM2 数字签名 | 签名、验签、错误验证 |
+| [sm2-encrypt.mjs](./example/sm2-encrypt.mjs) | SM2 公钥加密 | 加密、解密、不同长度消息 |
+| [sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs) | SM2 密钥交换 | ECDH 协议、密钥协商 |
+| [sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) | SM4 基础加密 | ECB 模式、PKCS7 填充 |
+| [sm4-modes.mjs](./example/sm4-modes.mjs) | SM4 多种模式 | ECB/CBC/CTR/GCM 对比 |
+
+### 🚀 运行示例
 
 ```bash
 # 进入示例目录
@@ -195,12 +234,14 @@ npm run sm2-keypair        # SM2 密钥对生成
 npm run sm2-sign           # SM2 数字签名
 npm run sm2-encrypt        # SM2 公钥加密
 npm run sm2-keyexchange    # SM2 密钥交换
+npm run sm4-ecb-simple     # SM4 基础加密
+npm run sm4-modes          # SM4 多种模式
 
 # 运行所有示例
 npm run all
 ```
 
-查看 [example/README.md](./example/README.md) 了解更多详情。
+详细说明请查看 [example/README.md](./example/README.md)。
 
 ## �📖 文档
 

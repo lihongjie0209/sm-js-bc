@@ -159,7 +159,96 @@
     </build>
 
     <profiles>
-        <!-- Profile for running with specific GraalVM -->
+        <!-- Quick Test Profile: ~10 seconds -->
+        <profile>
+            <id>quick</id>
+            <properties>
+                <test.iterations>10</test.iterations>
+                <excludedGroups>stress,performance</excludedGroups>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <configuration>
+                            <includes>
+                                <include>**/SM4CipherInteropTest.java</include>
+                                <include>**/ParameterizedInteropTest.java</include>
+                            </includes>
+                            <excludedGroups>${excludedGroups}</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Standard Test Profile: ~1 minute (default) -->
+        <profile>
+            <id>standard</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <test.iterations>100</test.iterations>
+                <excludedGroups>stress</excludedGroups>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <configuration>
+                            <excludedGroups>${excludedGroups}</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Full Test Profile: ~5 minutes -->
+        <profile>
+            <id>full</id>
+            <properties>
+                <test.iterations>10000</test.iterations>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <configuration>
+                            <!-- Run all tests including stress tests -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Benchmark Profile: Performance tests only -->
+        <profile>
+            <id>benchmark</id>
+            <properties>
+                <test.iterations>1000</test.iterations>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <configuration>
+                            <groups>performance</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- GraalVM Profile: Optimized for GraalVM -->
         <profile>
             <id>graalvm</id>
             <build>
@@ -173,6 +262,25 @@
                                 <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
                                 <jvmArg>--add-opens=java.base/java.util=ALL-UNNAMED</jvmArg>
                             </jvmArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Parallel Execution Profile -->
+        <profile>
+            <id>parallel</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire.version}</version>
+                        <configuration>
+                            <parallel>classes</parallel>
+                            <threadCount>4</threadCount>
+                            <perCoreThreadCount>true</perCoreThreadCount>
                         </configuration>
                     </plugin>
                 </plugins>

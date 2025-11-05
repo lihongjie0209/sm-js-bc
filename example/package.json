@@ -10,7 +10,9 @@
     "sm2-sign": "node sm2-sign.mjs",
     "sm2-encrypt": "node sm2-encrypt.mjs",
     "sm2-keyexchange": "node sm2-keyexchange.mjs",
-    "all": "npm run sm3-hash && npm run sm2-keypair && npm run sm2-sign && npm run sm2-encrypt && npm run sm2-keyexchange"
+    "sm4-ecb-simple": "node sm4-ecb-simple.mjs",
+    "sm4-modes": "node sm4-modes.mjs",
+    "all": "npm run sm3-hash && npm run sm2-keypair && npm run sm2-sign && npm run sm2-encrypt && npm run sm2-keyexchange && npm run sm4-ecb-simple && npm run sm4-modes"
   },
   "dependencies": {
     "sm-js-bc": "file:.."

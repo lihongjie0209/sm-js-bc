@@ -48,10 +48,15 @@ public abstract class BaseGraalVMTest {
      */
     protected static boolean isGraalVMJavaScriptAvailable() {
         try {
-            Context testContext = Context.newBuilder("js").build();
+            Context testContext = Context.newBuilder("js")
+                    .allowAllAccess(true)
+                    .allowExperimentalOptions(true)
+                    .option("js.ecmascript-version", "2022")
+                    .option("js.nashorn-compat", "true")
+                    .build();
             testContext.close();
             return true;
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             return false;
         }
     }

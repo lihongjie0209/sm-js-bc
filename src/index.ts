@@ -40,6 +40,22 @@ export { KDF } from './crypto/kdf/KDF';
 // SM2
 export { SM2 } from './crypto/SM2';
 
+// SM4
+export { SM4 } from './crypto/SM4';
+export { SM4Engine } from './crypto/engines/SM4Engine';
+export type { BlockCipher } from './crypto/BlockCipher';
+export { KeyParameter } from './crypto/params/KeyParameter';
+export { ParametersWithIV } from './crypto/params/ParametersWithIV';
+export { AEADParameters } from './crypto/params/AEADParameters';
+export { ECBBlockCipher } from './crypto/modes/ECBBlockCipher';
+export { CBCBlockCipher } from './crypto/modes/CBCBlockCipher';
+export { SICBlockCipher } from './crypto/modes/SICBlockCipher';
+export { CFBBlockCipher } from './crypto/modes/CFBBlockCipher';
+export { OFBBlockCipher } from './crypto/modes/OFBBlockCipher';
+export { GCMBlockCipher } from './crypto/modes/GCMBlockCipher';
+export { PKCS7Padding } from './crypto/paddings/PKCS7Padding';
+export { PaddedBufferedBlockCipher } from './crypto/paddings/PaddedBufferedBlockCipher';
+
 // 密钥交换
 export { SM2KeyExchange } from './crypto/agreement/SM2KeyExchange';
 export { SM2KeyExchangePrivateParameters } from './crypto/params/SM2KeyExchangePrivateParameters';

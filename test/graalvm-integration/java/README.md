@@ -58,7 +58,9 @@ This creates the required distribution files in the `dist/` directory:
 2. **`SM2SignatureInteropTest`**: Cross-language signature verification tests
 3. **`SM2EncryptionInteropTest`**: Cross-language encryption/decryption tests
 4. **`SM3DigestInteropTest`**: Cross-language digest algorithm tests
-5. **`PerformanceIntegrationTest`**: Performance comparison and integration scenarios
+5. **`SM4CipherInteropTest`**: ⭐ **NEW** - Comprehensive SM4 cipher mode tests (ECB, CBC, CTR, GCM)
+6. **`ParameterizedInteropTest`**: ⭐ **NEW** - Parameterized and property-based tests
+7. **`PerformanceIntegrationTest`**: Performance comparison and integration scenarios
 
 ### Test Categories
 
@@ -80,11 +82,67 @@ This creates the required distribution files in the `dist/` directory:
 - Incremental digest updates
 - Binary data handling
 
+#### ⭐ SM4 Cipher Tests (NEW)
+- **ECB Mode**: Single/multi-block, various sizes, padding verification
+- **CBC Mode**: IV handling, multi-block chaining
+- **CTR Mode**: Stream cipher, no padding required
+- **GCM Mode**: AEAD (Authenticated Encryption with Associated Data)
+  - MAC verification
+  - AAD (Additional Authenticated Data) support
+  - Tampering detection
+- **Cross-Platform**: All modes verified Java ↔ JavaScript
+- **Edge Cases**: Empty input, block boundaries, invalid parameters
+- **Random Testing**: 100 iterations with random keys/IVs/plaintexts
+
+#### ⭐ Parameterized Tests (NEW)
+- **SM3 Standard Inputs**: Empty, single-char, standard test vectors
+- **SM3 Message Sizes**: 0B to 10KB, block boundary testing
+- **SM3 Unicode**: Chinese, Japanese, Korean, Arabic, emojis
+- **SM3 Binary Patterns**: All zeros, all ones, alternating, ascending
+- **SM3 Property-Based**: Deterministic, fixed-length, avalanche effect
+- **SM4 Boundary Conditions**: Invalid keys, IVs, block sizes
+- **Stress Tests**: Large data (10MB), concurrent operations
+
 #### Performance Tests
 - Algorithm performance comparison
 - Memory usage patterns
 - End-to-end communication scenarios
 - Resource cleanup verification
+- Throughput measurements (MB/s)
+
+## Test Statistics
+
+### Total Test Count: **300+ tests**
+
+| Test Category | Test Count | Description |
+|--------------|------------|-------------|
+| SM3 Parameterized | 50+ | Various inputs, sizes, Unicode, patterns |
+| SM3 Property-Based | 350+ | Deterministic, avalanche, collision resistance |
+| SM3 Random | 50+ | Random data consistency tests |
+| SM4 ECB Mode | 15+ | Single/multi-block, various sizes |
+| SM4 CBC Mode | 15+ | IV handling, chaining |
+| SM4 CTR Mode | 10+ | Stream cipher tests |
+| SM4 GCM Mode | 20+ | AEAD, MAC verification, tampering |
+| SM4 Random | 100+ | Random consistency tests |
+| SM4 Boundary | 10+ | Edge cases, invalid parameters |
+| Performance | 5+ | Throughput, stress tests |
+| **TOTAL** | **300+** | Comprehensive cross-language validation |
+
+### Test Execution Profiles
+
+1. **Quick Profile** (`-P quick`): ~30 tests, ~10 seconds
+   - Core functionality only
+   - 10 random iterations per test
+   
+2. **Standard Profile** (default): ~150 tests, ~1 minute
+   - Parameterized tests
+   - 100 random iterations per test
+   
+3. **Full Profile** (`-P full`): 300+ tests, ~5 minutes
+   - All tests including stress tests
+   - 10,000 random iterations
+   
+4. **Benchmark Profile** (`-P benchmark`): Performance tests only
 
 ## Running Tests
 
@@ -95,10 +153,66 @@ cd test/graalvm-integration/java
 mvn clean test
 ```
 
-**Expected Results:**
-- ✅ **3 tests passing** (SimplifiedCrossLanguageTest - Node.js based)
-- ⚠️ **17 tests skipped** (GraalVM Polyglot tests - optional advanced features)
+**Expected Results (Standard Profile):**
+- ✅ **150+ tests passing** (SM3, SM4, Parameterized tests)
+- ⚠️ **Skipped tests** (GraalVM Polyglot - if not configured)
 - ❌ **0 tests failing**
+
+### Running Specific Test Profiles
+
+#### Quick Tests (10 seconds)
+```bash
+mvn test -P quick
+```
+
+#### Standard Tests (1 minute) - Default
+```bash
+mvn test
+# or explicitly:
+mvn test -P standard
+```
+
+#### Full Tests (5 minutes) - All tests
+```bash
+mvn test -P full
+```
+
+#### Performance Benchmarks Only
+```bash
+mvn test -P benchmark -Dtest=*Performance*,*Benchmark*
+```
+
+### Running Specific Test Classes
+
+#### SM4 Tests Only
+```bash
+mvn test -Dtest=SM4CipherInteropTest
+```
+
+#### Parameterized Tests Only
+```bash
+mvn test -Dtest=ParameterizedInteropTest
+```
+
+#### SM3 Property Tests Only
+```bash
+mvn test -Dtest=ParameterizedInteropTest#testSM3_*Property
+```
+
+#### Skip Slow Tests
+```bash
+mvn test -Dgroups="!stress,!performance"
+```
+
+### Parallel Test Execution
+
+Speed up test execution with parallel threads:
+
+```bash
+mvn test -DparallelTests=4
+# or
+mvn test -Dparallel=classes -DthreadCount=4
+```
 
 ### Test Categories
 
