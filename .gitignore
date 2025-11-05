@@ -11,6 +11,10 @@ dist/
 build/
 *.tsbuildinfo
 
+# Java build outputs
+target/
+*.class
+
 # Coverage directory used by tools like istanbul
 coverage/
 *.lcov

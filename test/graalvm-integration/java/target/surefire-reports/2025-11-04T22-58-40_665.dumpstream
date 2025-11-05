@@ -1,5 +1,0 @@
-# Created at 2025-11-04T22:58:40.810
-Boot Manifest-JAR contains absolute paths in classpath 'D:\code\sm-js-bc\test\graalvm-integration\java\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-
