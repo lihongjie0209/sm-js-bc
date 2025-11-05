@@ -32,6 +32,7 @@ export { ECKeyParameters } from './crypto/params/ECKeyParameters';
 export { ECPublicKeyParameters } from './crypto/params/ECPublicKeyParameters';
 export { ECPrivateKeyParameters } from './crypto/params/ECPrivateKeyParameters';
 export { ParametersWithRandom } from './crypto/params/ParametersWithRandom';
+export { ParametersWithID } from './crypto/params/ParametersWithID';
 
 // KDF
 export { KDF } from './crypto/kdf/KDF';
