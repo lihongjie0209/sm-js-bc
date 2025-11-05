@@ -1,0 +1,18 @@
+{
+  "name": "sm-js-bc-examples",
+  "version": "1.0.0",
+  "description": "Examples for sm-js-bc library",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "sm3-hash": "node sm3-hash.mjs",
+    "sm2-keypair": "node sm2-keypair.mjs",
+    "sm2-sign": "node sm2-sign.mjs",
+    "sm2-encrypt": "node sm2-encrypt.mjs",
+    "sm2-keyexchange": "node sm2-keyexchange.mjs",
+    "all": "npm run sm3-hash && npm run sm2-keypair && npm run sm2-sign && npm run sm2-encrypt && npm run sm2-keyexchange"
+  },
+  "dependencies": {
+    "sm-js-bc": "file:.."
+  }
+}

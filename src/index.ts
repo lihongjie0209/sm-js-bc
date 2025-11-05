@@ -39,6 +39,11 @@ export { KDF } from './crypto/kdf/KDF';
 // SM2
 export { SM2 } from './crypto/SM2';
 
+// 密钥交换
+export { SM2KeyExchange } from './crypto/agreement/SM2KeyExchange';
+export { SM2KeyExchangePrivateParameters } from './crypto/params/SM2KeyExchangePrivateParameters';
+export { SM2KeyExchangePublicParameters } from './crypto/params/SM2KeyExchangePublicParameters';
+
 // 加密引擎
 export { SM2Engine, SM2Mode } from './crypto/engines/SM2Engine';
 
