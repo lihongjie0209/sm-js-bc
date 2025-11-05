@@ -69,19 +69,15 @@ jspm_packages/
 ehthumbs.db
 Thumbs.db
 
-# Temporary files
+# Debug and test files
 *.tmp
 *.temp
 
 # Data directory (contains reference Java source code)
 data/
 
-# Debug and test files
+# Debug files only (keep test-all.mjs)
 debug-*.mjs
-test-*.js
-test-*.mjs
-test-*.ts
-test-*.html
 build.mjs
 tsdown.config.ts
 
