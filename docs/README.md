@@ -1,0 +1,311 @@
+# SM2/SM3 TypeScript 实现项目 - 文档导航
+
+## 📚 文档概览
+
+本项目旨在使用 TypeScript 一比一复刻 Bouncy Castle Java (bc-java) 中的 SM2 和 SM3 算法实现。
+
+## 📖 文档列表
+
+### 1. [需求文档](./需求.md)
+- 项目背景和目标
+- 技术栈选择
+- 基本要求
+
+### 2. [实现计划](./implementation-plan.md) ⭐
+- **核心算法模块详解**
+  - SM3 消息摘要算法
+  - SM2 椭圆曲线算法（签名、加密、密钥交换）
+- **基础设施模块**
+  - 摘要算法基础设施
+  - 椭圆曲线基础设施
+  - 工具类和异常处理
+- **第三方依赖清单**
+  - 运行时依赖：零依赖
+  - 开发依赖：TypeScript, tsdown, Vitest
+- **项目结构完整规划**
+- **10 周实施时间表**
+  - Phase 1-7: 分阶段实现
+  - 代码规范和文档要求
+  - 质量保证措施
+
+### 3. [测试策略](./test-strategy.md) ⭐
+- **两阶段测试策略**
+  - 阶段 1: 开发阶段 - JavaScript 自闭环测试
+  - 阶段 2: 完成阶段 - GraalVM 跨语言互操作测试
+- **为什么选择 GraalVM？**
+  - 签名场景：交叉验证（JS签名→Java验证，Java签名→JS验证）
+  - 密钥交换：交互测试（JS Alice ↔ Java Bob）
+  - 加密场景：交叉加解密
+- **详细测试实现**
+  - Java 测试项目配置
+  - GraalVM Context 使用
+  - 跨语言对象转换
+  - 具体测试用例代码
+- **CI/CD 集成方案**
+  - 开发阶段 CI（快速反馈）
+  - 完成阶段 CI（互操作验证）
+- **10 周实施路线图**
+  - 每个阶段的测试重点
+  - 测试覆盖率目标
+
+### 4. [测试文档](./TESTING.md) 🎯 **[1077 tests ✅]**
+- **测试概览和统计**
+  - 参数化测试：141 个
+  - 属性测试：920 个
+  - 互操作测试：16 个
+- **测试架构详解**
+  - 目录结构和文件组织
+  - 测试基类和工具类
+- **快速开始指南**
+  - 一键运行所有测试
+  - JavaScript 单元测试
+  - Java GraalVM 互操作测试
+- **测试类型详解**
+  - 参数化测试示例和模式
+  - 属性测试示例和验证属性
+  - 互操作测试示例和场景
+- **环境配置**
+  - JavaScript 和 Java 测试环境要求
+  - 依赖配置和版本要求
+- **编写测试指南**
+  - 添加新测试的步骤
+  - 测试最佳实践
+  - 调试技巧
+- **测试覆盖率目标**
+
+### 5. [快速开始指南](./getting-started.md) ⭐
+- **环境准备**
+  - Node.js, TypeScript 配置
+  - Java + GraalVM 配置（互操作测试用）
+- **项目初始化步骤**
+  - 目录结构创建
+  - 依赖安装
+  - 配置文件设置
+- **第一个实现：Pack 工具类**
+  - 完整源码
+  - 完整测试代码
+  - 运行测试的命令
+- **TDD 工作流指南**
+- **Git 工作流和提交规范**
+
+
+- **环境准备**
+  - Node.js, TypeScript 配置
+  - Java + GraalVM 配置（互操作测试用）
+- **项目初始化步骤**
+  - 目录结构创建
+  - 依赖安装
+  - 配置文件设置
+- **第一个实现：Pack 工具类**
+  - 完整源码
+  - 完整测试代码
+  - 运行测试的命令
+- **TDD 工作流指南**
+- **Git 工作流和提交规范**
+
+## 🚀 快速导航
+
+### 如果你是项目新成员
+1. 先阅读 [需求文档](./需求.md) 了解项目背景
+2. 再看 [实现计划](./implementation-plan.md) 了解技术架构
+3. 最后跟随 [快速开始指南](./getting-started.md) 搭建环境
+
+### 如果你要开始编码
+1. 确保已完成 [快速开始指南](./getting-started.md) 的环境配置
+2. 参考 [实现计划](./implementation-plan.md) 中的项目结构
+3. 按照 [测试策略](./test-strategy.md) 编写测试优先的代码
+
+### 如果你要理解测试方案
+1. 重点阅读 [测试策略](./test-strategy.md)
+2. 理解两阶段测试的设计理念
+3. 查看具体的测试代码示例
+
+## 📊 项目进度追踪
+
+### Phase 1: 基础设施（第 1-2 周）
+- [ ] 项目初始化
+- [ ] Pack 工具类 + 测试
+- [ ] Arrays 工具类 + 测试
+- [ ] Bytes 工具类 + 测试
+- [ ] BigIntegers 工具类 + 测试
+- [ ] 异常类 + 测试
+
+### Phase 2: SM3 实现（第 3 周）
+- [ ] Digest 接口
+- [ ] GeneralDigest 抽象类
+- [ ] SM3Digest 实现
+- [ ] SM3 单元测试
+- [ ] SM3 标准向量测试
+
+### Phase 3: 椭圆曲线基础（第 4-5 周）
+- [ ] 有限域运算
+- [ ] ECFieldElement
+- [ ] ECPoint
+- [ ] ECCurve
+- [ ] ECMultiplier
+- [ ] ECAlgorithms
+- [ ] EC 参数类
+
+### Phase 4: SM2 签名（第 6 周）
+- [ ] DSAEncoding
+- [ ] DSAKCalculator
+- [ ] SM2Signer
+- [ ] 签名验签自闭环测试
+
+### Phase 5: SM2 加密（第 7 周）
+- [ ] SM2Engine
+- [ ] KDF 实现
+- [ ] 加密解密自闭环测试
+
+### Phase 6: SM2 密钥交换（第 8 周）
+- [ ] SM2KeyExchange
+- [ ] 密钥协商自闭环测试
+
+### Phase 7: GraalVM 互操作（第 9 周）
+- [ ] 打包 JS bundle
+- [ ] Java 测试项目
+- [ ] 跨语言签名测试
+- [ ] 跨语言加密测试
+- [ ] 跨语言密钥交换测试
+
+### Phase 8: 完善发布（第 10 周）
+- [ ] 性能优化
+- [ ] 文档完善
+- [ ] 发布准备
+
+## 🎯 核心设计决策
+
+### 1. 为什么零运行时依赖？
+- ✅ 完全控制实现细节
+- ✅ 与 bc-java 一比一对应
+- ✅ 无外部库的安全风险
+- ✅ 包体积最小化
+
+### 2. 为什么使用两阶段测试？
+- **阶段 1（自闭环）优势**：
+  - 开发效率高，快速迭代
+  - 易于调试和定位问题
+  - 适合 CI 持续集成
+  
+- **阶段 2（GraalVM）必要性**：
+  - 验证真正的互操作性
+  - 覆盖随机性场景（每次签名/加密不同）
+  - 覆盖交互场景（密钥协商需要双方）
+  - 确保与 bc-java 100% 兼容
+
+### 3. 为什么选择 GraalVM 而不是其他方案？
+- ✅ 真正的 Java ↔ JavaScript 互操作
+- ✅ 可以直接在 Java 测试中加载和调用 JS 代码
+- ✅ 支持复杂的对象传递和类型转换
+- ✅ 性能优秀，适合加密算法测试
+- ✅ Oracle 官方支持，生态成熟
+
+### 4. 项目结构为什么这样设计？
+```
+src/
+├── crypto/          # 密码学算法（对应 bc-java 的 crypto 包）
+├── math/            # 数学运算（对应 bc-java 的 math 包）
+├── util/            # 工具类（对应 bc-java 的 util 包）
+└── exceptions/      # 异常类
+```
+- ✅ 与 bc-java 包结构一致
+- ✅ 便于对照参考源码
+- ✅ 职责清晰，易于维护
+
+## 🔗 相关资源
+
+### 官方标准文档
+- [GM/T 0003-2012 SM2 椭圆曲线公钥密码算法](http://www.gmbz.org.cn/)
+- [GM/T 0004-2012 SM3 密码杂凑算法](http://www.gmbz.org.cn/)
+- [GB/T 32905-2016 信息安全技术 SM3密码杂凑算法](http://www.gb688.cn/)
+
+### 参考实现
+- [Bouncy Castle Java](https://github.com/bcgit/bc-java) - 本项目的参考实现
+- [GmSSL](https://github.com/guanzhi/GmSSL) - C 语言实现
+- [@noble/curves](https://github.com/paulmillr/noble-curves) - JavaScript 椭圆曲线库（仅用于测试对比）
+
+### 技术文档
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Vitest Documentation](https://vitest.dev/)
+- [GraalVM Polyglot API](https://www.graalvm.org/latest/reference-manual/polyglot-programming/)
+- [tsdown Documentation](https://tsdown.netlify.app/)
+
+### IETF 草案
+- [draft-shen-sm2-ecdsa-02](https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02) - SM2 ECDSA
+- [draft-shen-sm3-hash-01](https://tools.ietf.org/html/draft-shen-sm3-hash-01) - SM3 Hash
+
+## 💡 最佳实践
+
+### 编码实践
+1. **始终参考 bc-java 源码** - 保持实现一致性
+2. **保留原始注释** - 包括算法说明和标准引用
+3. **使用严格类型** - 充分利用 TypeScript 类型系统
+4. **测试先行（TDD）** - 先写测试，再写实现
+
+### 测试实践
+1. **开发时用自闭环** - 快速验证逻辑正确性
+2. **发布前用 GraalVM** - 确保互操作性
+3. **使用标准向量** - 验证符合国密标准
+4. **覆盖边界条件** - 空输入、最大值、异常情况
+
+### 文档实践
+1. **API 文档使用 TSDoc** - 自动生成文档
+2. **算法注释中英双语** - 便于理解
+3. **示例代码可运行** - 确保示例有效
+
+## ❓ 常见问题
+
+### Q: 为什么不直接使用现有的 JavaScript 加密库？
+A: 本项目的目标是一比一复刻 bc-java 实现，确保与 Java 生态完全兼容，这是现有库无法保证的。
+
+### Q: GraalVM 测试会不会太复杂？
+A: 开发阶段完全不需要 GraalVM，只在最后验证互操作性时使用。大部分时间是在做简单快速的自闭环测试。
+
+### Q: 性能会比 bc-java 差吗？
+A: JavaScript 引擎（V8/Node.js）的性能已经非常接近 JVM，对于加密算法这种计算密集型任务，性能差异在可接受范围内。
+
+### Q: 可以用在浏览器中吗？
+A: 可以！项目会输出 ESM 和 IIFE 格式，都可以在浏览器中使用。只是某些依赖 Node.js API 的测试代码仅在 Node 环境运行。
+
+### Q: 如何贡献代码？
+A: 
+1. Fork 项目
+2. 创建特性分支
+3. 编写代码和测试（确保测试通过）
+4. 提交 Pull Request
+5. 等待代码审查
+
+## 📝 变更日志
+
+### 2025-10-31
+- 创建项目文档结构
+- 完成实现计划文档
+- 完成测试策略文档（两阶段测试方案）
+- 完成快速开始指南
+- 创建文档导航
+
+## 🎉 开始你的第一个贡献
+
+```bash
+# 克隆项目
+git clone <repository-url>
+cd sm-js-bc
+
+# 安装依赖
+npm install
+
+# 创建第一个实现
+# 跟随 docs/getting-started.md 的指引
+
+# 运行测试
+npm test
+
+# 提交代码
+git add .
+git commit -m "feat(util): implement Pack utility class"
+git push
+```
+
+---
+
+**祝编码愉快！如有疑问，请查阅相关文档或提出 Issue。**

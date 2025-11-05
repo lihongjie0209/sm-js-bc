@@ -1,0 +1,12 @@
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\BaseGraalVMTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\SM2EncryptionInteropTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\SimplifiedCrossLanguageTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\SM3DigestInteropTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\parameterized\SM3ParameterizedTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\utils\TestDataGenerator.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\parameterized\SM2SignatureParameterizedTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\property\SM2SignaturePropertyTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\parameterized\SM2EncryptionParameterizedTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\random\SM3PropertyBasedTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\SM2SignatureInteropTest.java
+D:\code\sm-js-bc\test\graalvm-integration\java\src\test\java\com\sm\bc\graalvm\property\SM2EncryptionPropertyTest.java

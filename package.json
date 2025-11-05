@@ -1,0 +1,56 @@
+{
+  "name": "sm-bc",
+  "version": "0.1.0",
+  "description": "SM2/SM3 implementation in TypeScript based on Bouncy Castle Java",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "browser": "dist/index.js",
+  "unpkg": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:all": "node test-all.mjs",
+    "test:js-only": "node test-all.mjs --skip-java",
+    "test:java-only": "node test-all.mjs --skip-js",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "sm2",
+    "sm3",
+    "cryptography",
+    "chinese-cryptography",
+    "gm",
+    "elliptic-curve"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "babel-plugin-transform-bigint": "^1.0.34",
+    "tsup": "^8.5.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}

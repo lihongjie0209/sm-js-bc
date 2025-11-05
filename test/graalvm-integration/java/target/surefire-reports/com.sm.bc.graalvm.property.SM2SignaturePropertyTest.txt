@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.sm.bc.graalvm.property.SM2SignaturePropertyTest
+-------------------------------------------------------------------------------
+Tests run: 100, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.544 s -- in com.sm.bc.graalvm.property.SM2SignaturePropertyTest
