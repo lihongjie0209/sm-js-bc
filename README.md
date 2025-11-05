@@ -101,45 +101,108 @@ console.log('Decrypted:', new TextDecoder().decode(decrypted));
 ### SM2 密钥交换
 
 ```typescript
-import { SM2KeyExchange } from 'sm-js-bc';
+import { 
+  SM2, 
+  SM2KeyExchange,
+  SM2KeyExchangePrivateParameters,
+  SM2KeyExchangePublicParameters,
+  ECPrivateKeyParameters,
+  ECPublicKeyParameters
+} from 'sm-js-bc';
 
-// 初始方（Alice）
+// 获取SM2域参数
+const domainParams = SM2.getParameters();
+const curve = domainParams.getCurve();
+
+// Alice 生成密钥对（静态 + 临时）
 const aliceStatic = SM2.generateKeyPair();
-const aliceExchange = new SM2KeyExchange();
-aliceExchange.init(aliceStatic.privateKey);
+const aliceEphemeral = SM2.generateKeyPair();
 
-const aliceEphemeral = aliceExchange.generateEphemeralKeyPair();
+const aliceStaticPriv = new ECPrivateKeyParameters(aliceStatic.privateKey, domainParams);
+const aliceStaticPub = new ECPublicKeyParameters(
+  curve.createPoint(aliceStatic.publicKey.x, aliceStatic.publicKey.y), 
+  domainParams
+);
+const aliceEphemeralPriv = new ECPrivateKeyParameters(aliceEphemeral.privateKey, domainParams);
+const aliceEphemeralPub = new ECPublicKeyParameters(
+  curve.createPoint(aliceEphemeral.publicKey.x, aliceEphemeral.publicKey.y), 
+  domainParams
+);
 
-// 响应方（Bob）
+// Bob 生成密钥对（静态 + 临时）
 const bobStatic = SM2.generateKeyPair();
-const bobExchange = new SM2KeyExchange();
-bobExchange.init(bobStatic.privateKey);
+const bobEphemeral = SM2.generateKeyPair();
 
-const bobEphemeral = bobExchange.generateEphemeralKeyPair();
+const bobStaticPriv = new ECPrivateKeyParameters(bobStatic.privateKey, domainParams);
+const bobStaticPub = new ECPublicKeyParameters(
+  curve.createPoint(bobStatic.publicKey.x, bobStatic.publicKey.y), 
+  domainParams
+);
+const bobEphemeralPriv = new ECPrivateKeyParameters(bobEphemeral.privateKey, domainParams);
+const bobEphemeralPub = new ECPublicKeyParameters(
+  curve.createPoint(bobEphemeral.publicKey.x, bobEphemeral.publicKey.y), 
+  domainParams
+);
+
+// Alice 初始化密钥交换（发起方）
+const aliceExchange = new SM2KeyExchange();
+const alicePrivParams = new SM2KeyExchangePrivateParameters(
+  true,  // initiator
+  aliceStaticPriv,
+  aliceEphemeralPriv
+);
+aliceExchange.init(alicePrivParams);
 
 // Alice 计算共享密钥
-const aliceSharedKey = aliceExchange.calculateKey(
-  16,  // 密钥长度
-  bobStatic.publicKey,
-  bobEphemeral.publicKey,
-  true  // initiator
+const bobPubParams = new SM2KeyExchangePublicParameters(bobStaticPub, bobEphemeralPub);
+const aliceSharedKey = aliceExchange.calculateKey(128, bobPubParams);
+
+// Bob 初始化密钥交换（响应方）
+const bobExchange = new SM2KeyExchange();
+const bobPrivParams = new SM2KeyExchangePrivateParameters(
+  false,  // responder
+  bobStaticPriv,
+  bobEphemeralPriv
 );
+bobExchange.init(bobPrivParams);
 
 // Bob 计算共享密钥
-const bobSharedKey = bobExchange.calculateKey(
-  16,  // 密钥长度
-  aliceStatic.publicKey,
-  aliceEphemeral.publicKey,
-  false  // responder
-);
+const alicePubParams = new SM2KeyExchangePublicParameters(aliceStaticPub, aliceEphemeralPub);
+const bobSharedKey = bobExchange.calculateKey(128, alicePubParams);
 
-// 双方得到相同的共享密钥
+// 验证双方密钥一致
 console.log('Keys match:', 
   Buffer.from(aliceSharedKey).equals(Buffer.from(bobSharedKey))
 );
 ```
 
-## 📖 文档
+> **注意**: SM2 密钥交换是一个高级功能，需要使用专门的参数类。完整示例请查看 [example/sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs)
+
+## � 示例代码
+
+所有上述示例代码都可以在 [example](./example) 目录中找到完整的可运行版本：
+
+```bash
+# 进入示例目录
+cd example
+
+# 安装依赖
+npm install
+
+# 运行单个示例
+npm run sm3-hash           # SM3 哈希
+npm run sm2-keypair        # SM2 密钥对生成
+npm run sm2-sign           # SM2 数字签名
+npm run sm2-encrypt        # SM2 公钥加密
+npm run sm2-keyexchange    # SM2 密钥交换
+
+# 运行所有示例
+npm run all
+```
+
+查看 [example/README.md](./example/README.md) 了解更多详情。
+
+## �📖 文档
 
 详细文档请查看 [docs](./docs) 目录：
 
