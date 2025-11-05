@@ -1,5 +1,5 @@
 {
-  "name": "sm-bc",
+  "name": "sm-js-bc",
   "version": "0.1.0",
   "description": "SM2/SM3 implementation in TypeScript based on Bouncy Castle Java",
   "type": "module",
@@ -35,10 +35,20 @@
     "cryptography",
     "chinese-cryptography",
     "gm",
-    "elliptic-curve"
+    "elliptic-curve",
+    "bouncy-castle",
+    "typescript"
   ],
-  "author": "",
+  "author": "lihongjie0209",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lihongjie0209/sm-js-bc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lihongjie0209/sm-js-bc/issues"
+  },
+  "homepage": "https://github.com/lihongjie0209/sm-js-bc#readme",
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",
