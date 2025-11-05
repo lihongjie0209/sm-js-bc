@@ -1,6 +1,6 @@
 {
   "name": "sm-js-bc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SM2/SM3 implementation in TypeScript based on Bouncy Castle Java",
   "type": "module",
   "main": "dist/index.js",
