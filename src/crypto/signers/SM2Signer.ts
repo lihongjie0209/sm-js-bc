@@ -29,7 +29,7 @@ import { ParametersWithRandom } from '../params/ParametersWithRandom';
 import { ParametersWithID } from '../params/ParametersWithID';
 import { ECDomainParameters } from '../params/ECDomainParameters';
 import { ECPoint } from '../../math/ec/ECPoint';
-import { ECMultiplier } from '../../math/ec/ECMultiplier';
+import { ECMultiplier, FixedPointCombMultiplier } from '../../math/ec/ECMultiplier';
 import { SecureRandom } from '../../util/SecureRandom';
 import { Arrays } from '../../util/Arrays';
 import { BigIntegers } from '../../util/BigIntegers';
@@ -287,6 +287,16 @@ export class SM2Signer implements Signer {
   }
 
   /**
+   * Create base point multiplier (for compatibility with Bouncy Castle Java API).
+   * Can be overridden in subclasses to use different multipliers.
+   * 
+   * @returns ECMultiplier instance
+   */
+  protected createBasePointMultiplier(): ECMultiplier {
+    return new FixedPointCombMultiplier();
+  }
+
+  /**
    * Calculate public key from private key.
    */
   private calculatePublicKey(privateKey: ECPrivateKeyParameters): ECPublicKeyParameters {
@@ -349,14 +359,28 @@ export class SM2Signer implements Signer {
   }
 
   /**
-   * Convert hash bytes to integer in range [1, n-1].
+   * Calculate E value from message hash (for compatibility with Bouncy Castle Java API).
+   * 
+   * @param n - The order of the curve
+   * @param message - The message hash bytes
+   * @returns The E value as bigint
    */
-  private hashToInteger(hash: Uint8Array, n: bigint): bigint {
+  protected calculateE(n: bigint, message: Uint8Array): bigint {
     let e = 0n;
-    for (let i = 0; i < hash.length; i++) {
-      e = (e << 8n) | BigInt(hash[i]);
+    for (let i = 0; i < message.length; i++) {
+      e = (e << 8n) | BigInt(message[i]);
     }
     return e % n;
+  }
+
+  /**
+   * Convert hash bytes to integer in range [1, n-1].
+   * @deprecated Since v0.3.1. Use calculateE(n, message) instead for compatibility with Bouncy Castle Java API.
+   *             This private method is kept for internal backward compatibility and will be removed in v1.0.0.
+   * @internal
+   */
+  private hashToInteger(hash: Uint8Array, n: bigint): bigint {
+    return this.calculateE(n, hash);
   }
 
   /**
