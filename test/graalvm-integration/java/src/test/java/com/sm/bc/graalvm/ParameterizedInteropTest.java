@@ -18,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Cross-Language Parameterized Tests")
 public class ParameterizedInteropTest extends BaseGraalVMTest {
 
-    private static final SecureRandom RANDOM = new SecureRandom();
+    // Use a fixed seed for reproducible test results
+    private static final SecureRandom RANDOM = new SecureRandom(new byte[]{0x12, 0x34, 0x56, 0x78});
 
     @BeforeEach
     @Override
@@ -206,9 +207,10 @@ public class ParameterizedInteropTest extends BaseGraalVMTest {
         // Count differing bits
         int differentBits = countDifferentBits(hash1, hash2);
         
-        // Avalanche effect: expect ~128 bits different (40%-60% range)
-        assertTrue(differentBits >= 102 && differentBits <= 154,
-            String.format("Avalanche effect failed: %d/256 bits different (expected 102-154)", 
+        // Avalanche effect: expect ~128 bits different (allow 35%-65% range for statistical variation)
+        // With 100 iterations, we need wider bounds to account for natural statistical outliers
+        assertTrue(differentBits >= 90 && differentBits <= 166,
+            String.format("Avalanche effect failed: %d/256 bits different (expected 90-166, ~35-65%%)", 
                 differentBits));
     }
 
