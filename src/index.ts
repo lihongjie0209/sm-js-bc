@@ -75,3 +75,41 @@ export { SM2Signer } from './crypto/signers/SM2Signer';
 export { CryptoException } from './exceptions/CryptoException';
 export { DataLengthException } from './exceptions/DataLengthException';
 export { InvalidCipherTextException } from './exceptions/InvalidCipherTextException';
+
+// ASN.1
+export type { ASN1Encodable } from './asn1/ASN1Encodable';
+export { ASN1Primitive } from './asn1/ASN1Encodable';
+export { ASN1Tags } from './asn1/ASN1Tags';
+export { ASN1ObjectIdentifier } from './asn1/ASN1ObjectIdentifier';
+export { ASN1Integer } from './asn1/ASN1Integer';
+export { ASN1OctetString } from './asn1/ASN1OctetString';
+export { ASN1BitString } from './asn1/ASN1BitString';
+export { ASN1Sequence } from './asn1/ASN1Sequence';
+export { AlgorithmIdentifier } from './asn1/AlgorithmIdentifier';
+export { GMObjectIdentifiers } from './asn1/GMObjectIdentifiers';
+export { DEREncoder } from './asn1/DEREncoder';
+export { DERDecoder } from './asn1/DERDecoder';
+
+// PEM
+export { PemObject } from './util/io/pem/PemObject';
+export { PemReader } from './util/io/pem/PemReader';
+export { PemWriter } from './util/io/pem/PemWriter';
+
+// PKCS#8 and PKCS#10
+export { PrivateKeyInfo } from './pkcs/PrivateKeyInfo';
+export { SubjectPublicKeyInfo } from './pkcs/SubjectPublicKeyInfo';
+export { SM2PrivateKeyEncoder } from './pkcs/SM2PrivateKeyEncoder';
+export { SM2PublicKeyEncoder } from './pkcs/SM2PublicKeyEncoder';
+export { PKCS10CertificationRequest, CertificationRequestInfo } from './pkcs/PKCS10CertificationRequest';
+export { PKCS10CertificationRequestBuilder } from './pkcs/PKCS10CertificationRequestBuilder';
+
+// X.509
+export { X509Name } from './x509/X509Name';
+export { X509Extensions, X509Extension, BasicConstraints, KeyUsage } from './x509/X509Extensions';
+export { Validity } from './x509/Validity';
+export { TBSCertificate } from './x509/TBSCertificate';
+export { X509Certificate } from './x509/X509Certificate';
+export { X509CertificateBuilder } from './x509/X509CertificateBuilder';
+export { SubjectAlternativeName, GeneralName, GeneralNameType } from './x509/SubjectAlternativeName';
+export { CertificateList, RevokedCertificate, CRLBuilder, TBSCertList } from './x509/CertificateList';
+export { CertPathValidator, CertPathValidationResult } from './x509/CertPathValidator';
