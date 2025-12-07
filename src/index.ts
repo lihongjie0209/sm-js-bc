@@ -91,11 +91,13 @@ export { PemObject } from './util/io/pem/PemObject';
 export { PemReader } from './util/io/pem/PemReader';
 export { PemWriter } from './util/io/pem/PemWriter';
 
-// PKCS#8
+// PKCS#8 and PKCS#10
 export { PrivateKeyInfo } from './pkcs/PrivateKeyInfo';
 export { SubjectPublicKeyInfo } from './pkcs/SubjectPublicKeyInfo';
 export { SM2PrivateKeyEncoder } from './pkcs/SM2PrivateKeyEncoder';
 export { SM2PublicKeyEncoder } from './pkcs/SM2PublicKeyEncoder';
+export { PKCS10CertificationRequest, CertificationRequestInfo } from './pkcs/PKCS10CertificationRequest';
+export { PKCS10CertificationRequestBuilder } from './pkcs/PKCS10CertificationRequestBuilder';
 
 // X.509
 export { X509Name } from './x509/X509Name';
@@ -104,3 +106,6 @@ export { Validity } from './x509/Validity';
 export { TBSCertificate } from './x509/TBSCertificate';
 export { X509Certificate } from './x509/X509Certificate';
 export { X509CertificateBuilder } from './x509/X509CertificateBuilder';
+export { SubjectAlternativeName, GeneralName, GeneralNameType } from './x509/SubjectAlternativeName';
+export { CertificateList, RevokedCertificate, CRLBuilder, TBSCertList } from './x509/CertificateList';
+export { CertPathValidator, CertPathValidationResult } from './x509/CertPathValidator';
