@@ -1,4 +1,5 @@
 import { X509Certificate } from './X509Certificate';
+import { X509Extensions } from './X509Extensions';
 import { CertificateList } from './CertificateList';
 import { ECPublicKeyParameters } from '../crypto/params/ECPublicKeyParameters';
 import { SM2 } from '../crypto/SM2';
@@ -130,7 +131,7 @@ export class CertPathValidator {
         
         if (extensions) {
           const bcExt = extensions.getExtension(
-            require('./X509Extensions').X509Extensions.BASIC_CONSTRAINTS
+            X509Extensions.BASIC_CONSTRAINTS
           );
           
           if (bcExt) {

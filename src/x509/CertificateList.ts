@@ -333,6 +333,12 @@ export class CertificateList extends ASN1Primitive {
 
   /**
    * Decode from DER encoded bytes
+   * 
+   * Note: Full CRL decoding requires parsing complex TBSCertList structure
+   * including time values, revoked certificate sequences, and extensions.
+   * For now, use CRLBuilder to create CRLs and use verify() to check them.
+   * 
+   * @throws Error CRL decoding is not yet implemented
    */
   static fromEncoded(encoded: Uint8Array): CertificateList {
     const { tag, content } = DERDecoder.decodeTLV(encoded, 0);
@@ -348,8 +354,8 @@ export class CertificateList extends ASN1Primitive {
       throw new Error('CertificateList must have exactly 3 elements');
     }
 
-    // For simplicity, we'll provide basic parsing
-    // Full implementation would require complete TBSCertList parsing
+    // TODO: Implement full CRL decoding when needed
+    // Would require parsing TBSCertList with time values, revoked certs, extensions
     throw new Error('CRL decoding not fully implemented - use CRLBuilder to create CRLs');
   }
 

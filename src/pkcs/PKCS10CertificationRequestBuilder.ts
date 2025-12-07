@@ -71,6 +71,8 @@ export class PKCS10CertificationRequestBuilder {
     }
 
     // Create signature algorithm identifier (SM2 with SM3)
+    // TODO: Make signature algorithm configurable via builder pattern
+    // to support other algorithms in the future
     const signatureAlgorithm = new AlgorithmIdentifier(GMObjectIdentifiers.sm2_with_sm3);
 
     // Create CertificationRequestInfo

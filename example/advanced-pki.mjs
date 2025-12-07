@@ -19,8 +19,7 @@ import {
   X509Extensions,
   CRLBuilder,
   CertPathValidator,
-  ECPublicKeyParameters,
-  KeyUsage
+  ECPublicKeyParameters
 } from '../dist/index.mjs';
 
 console.log('=== Advanced PKI Features Example ===\n');
