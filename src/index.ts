@@ -86,6 +86,7 @@ export { Zuc256Engine } from './crypto/engines/Zuc256Engine';
 
 // 签名器
 export { SM2Signer } from './crypto/signers/SM2Signer';
+export { SM9Signer } from './crypto/signers/SM9Signer';
 
 // 异常
 export { CryptoException } from './exceptions/CryptoException';
