@@ -47,12 +47,16 @@ export { ECPublicKeyParameters } from './crypto/params/ECPublicKeyParameters';
 export { ECPrivateKeyParameters } from './crypto/params/ECPrivateKeyParameters';
 export { ParametersWithRandom } from './crypto/params/ParametersWithRandom';
 export { ParametersWithID } from './crypto/params/ParametersWithID';
+export { SM9Parameters, SM9DomainParameters } from './crypto/params/SM9Parameters';
 
 // KDF
 export { KDF } from './crypto/kdf/KDF';
 
 // SM2
 export { SM2 } from './crypto/SM2';
+
+// SM9
+export { SM9Hash } from './crypto/SM9Hash';
 
 // SM4
 export { SM4 } from './crypto/SM4';
