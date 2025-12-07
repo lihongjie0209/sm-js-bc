@@ -1,25 +1,33 @@
 # SM-JS-BC
 
-> SM2/SM3 TypeScript implementation based on Bouncy Castle Java
+> SM2/SM3/SM4 + PKI TypeScript implementation based on Bouncy Castle Java
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 
-一比一复刻 [Bouncy Castle Java](https://github.com/bcgit/bc-java) 的 SM2、SM3 和 SM4 算法的 TypeScript 实现。
+一比一复刻 [Bouncy Castle Java](https://github.com/bcgit/bc-java) 的 SM2、SM3 和 SM4 算法以及 PKI 支持的 TypeScript 实现。
 
 ## ✨ 特性
 
+### 密码算法
 - 🔐 **SM2** - 椭圆曲线公钥密码算法（数字签名、公钥加密、密钥交换）
 - 🔒 **SM3** - 密码杂凑算法（256位消息摘要）
-- 🔑 **SM4** - 分组密码算法（128位对称加密）
+- 🔑 **SM4** - 分组密码算法（128位对称加密，支持多种工作模式）
 
+### PKI 支持 🆕
+- 📜 **X.509 证书** - 证书生成、解析、验证（支持 SM2 签名）
+- 🔐 **PKCS#8** - 私钥和公钥编码（PEM/DER 格式）
+- 📋 **ASN.1** - 完整的 DER 编码/解码支持
+- 🏛️ **证书管理** - 自签名证书、CA 证书、证书链验证
+
+### 其他特性
 - 🎯 **零运行时依赖** - 纯 TypeScript 实现
 - 🔒 **完全兼容** - 与 Bouncy Castle Java 完全互操作
 - 📦 **多格式输出** - 支持 CommonJS、ESM 和 IIFE
 - 🧪 **双重验证** - 自闭环测试 + GraalVM 跨语言测试
 - 📚 **完整文档** - 详细的 API 文档和使用指南
-- ✅ **高质量** - >90% 测试覆盖率
+- ✅ **高质量** - >90% 测试覆盖率，677+ 测试用例
 - 🌐 **浏览器支持** - 可在浏览器和 Node.js 中使用
 
 ## 📦 安装
@@ -203,6 +211,36 @@ console.log('Keys match:',
 
 📖 **完整示例**: [example/sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs)
 
+### X.509 证书
+
+```typescript
+import { SM2, X509Name, X509CertificateBuilder } from 'sm-js-bc';
+
+// Generate key pair
+const keyPair = SM2.generateKeyPair();
+
+// Create certificate
+const subject = new X509Name('CN=Test User,O=Test Org,C=CN');
+const notBefore = new Date();
+const notAfter = new Date(notBefore.getTime() + 365*24*60*60*1000);
+
+const cert = X509CertificateBuilder.generateSelfSigned(
+  subject,
+  keyPair,
+  { notBefore, notAfter }
+);
+
+// Export to PEM
+const certPEM = cert.toPEM();
+console.log(certPEM);
+
+// Verify certificate
+const isValid = cert.verify(publicKeyParams);
+console.log('Certificate valid:', isValid);
+```
+
+📖 **完整示例**: [example/x509-certificate.mjs](./example/x509-certificate.mjs)
+
 ---
 
 ## 📚 完整示例
@@ -218,6 +256,7 @@ console.log('Keys match:',
 | [sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs) | SM2 密钥交换 | ECDH 协议、密钥协商 |
 | [sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) | SM4 基础加密 | ECB 模式、PKCS7 填充 |
 | [sm4-modes.mjs](./example/sm4-modes.mjs) | SM4 多种模式 | ECB/CBC/CTR/GCM 对比 |
+| [x509-certificate.mjs](./example/x509-certificate.mjs) | X.509 证书 🆕 | 证书生成、签名、验证、PEM编码 |
 
 ### 🚀 运行示例
 
