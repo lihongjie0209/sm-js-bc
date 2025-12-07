@@ -96,3 +96,11 @@ export { PrivateKeyInfo } from './pkcs/PrivateKeyInfo';
 export { SubjectPublicKeyInfo } from './pkcs/SubjectPublicKeyInfo';
 export { SM2PrivateKeyEncoder } from './pkcs/SM2PrivateKeyEncoder';
 export { SM2PublicKeyEncoder } from './pkcs/SM2PublicKeyEncoder';
+
+// X.509
+export { X509Name } from './x509/X509Name';
+export { X509Extensions, X509Extension, BasicConstraints, KeyUsage } from './x509/X509Extensions';
+export { Validity } from './x509/Validity';
+export { TBSCertificate } from './x509/TBSCertificate';
+export { X509Certificate } from './x509/X509Certificate';
+export { X509CertificateBuilder } from './x509/X509CertificateBuilder';
