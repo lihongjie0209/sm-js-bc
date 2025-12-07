@@ -129,7 +129,7 @@ public class HMacInteropTest extends BaseGraalVMTest {
             new TestCase("key", "hello"),
             new TestCase("key", "The quick brown fox jumps over the lazy dog"),
             new TestCase("short", "test message"),
-            new TestCase("verylongkeythatexceedstheblocksizeofsm3digestwhichis64bytes...", "message"),
+            new TestCase(new String(new char[80]).replace('\0', 'A'), "message"), // 80-byte key > blockSize (64)
             new TestCase("key", "Very long message that exceeds the block size of 64 bytes for SM3 digest...".repeat(10))
         };
         

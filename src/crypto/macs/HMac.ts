@@ -1,5 +1,6 @@
 import { Mac } from '../Mac';
 import { Digest } from '../Digest';
+import { ExtendedDigest } from '../ExtendedDigest';
 import { CipherParameters } from '../params/CipherParameters';
 import { KeyParameter } from '../params/KeyParameter';
 import { DataLengthException } from '../../exceptions/DataLengthException';
@@ -33,9 +34,9 @@ export class HMac implements Mac {
     this.digestSize = digest.getDigestSize();
     
     // Get the block length from the digest
-    // For SM3, this is 64 bytes
-    if ('getByteLength' in digest && typeof (digest as any).getByteLength === 'function') {
-      this.blockLength = (digest as any).getByteLength();
+    // ExtendedDigest provides getByteLength(), fallback to 64 for basic Digest
+    if (this.isExtendedDigest(digest)) {
+      this.blockLength = digest.getByteLength();
     } else {
       // Default to 64 bytes (SHA-1, SHA-256, SM3)
       this.blockLength = 64;
@@ -104,6 +105,16 @@ export class HMac implements Mac {
 
     // Initialize the inner hash
     this.digest.updateArray(this.inputPad, 0, this.inputPad.length);
+  }
+
+  /**
+   * Type guard to check if digest is ExtendedDigest
+   * 
+   * @param digest - the digest to check
+   * @returns true if digest implements ExtendedDigest
+   */
+  private isExtendedDigest(digest: Digest): digest is ExtendedDigest {
+    return 'getByteLength' in digest && typeof (digest as ExtendedDigest).getByteLength === 'function';
   }
 
   /**
