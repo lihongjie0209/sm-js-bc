@@ -11,12 +11,15 @@ export type { Memoable } from './crypto/Memoable';
 export type { Digest } from './crypto/Digest';
 export type { ExtendedDigest } from './crypto/ExtendedDigest';
 export type { Mac } from './crypto/Mac';
+export type { StreamCipher } from './crypto/StreamCipher';
 
 // 摘要算法
 export { SM3Digest } from './crypto/digests/SM3Digest';
 
 // MAC 算法
 export { HMac } from './crypto/macs/HMac';
+export { Zuc128Mac } from './crypto/macs/Zuc128Mac';
+export { Zuc256Mac } from './crypto/macs/Zuc256Mac';
 
 // 椭圆曲线
 export { ECConstants } from './math/ec/ECConstants';
@@ -67,6 +70,8 @@ export { SM2KeyExchangePublicParameters } from './crypto/params/SM2KeyExchangePu
 
 // 加密引擎
 export { SM2Engine, SM2Mode } from './crypto/engines/SM2Engine';
+export { ZUCEngine } from './crypto/engines/ZUCEngine';
+export { Zuc256Engine } from './crypto/engines/Zuc256Engine';
 
 // 签名器
 export { SM2Signer } from './crypto/signers/SM2Signer';

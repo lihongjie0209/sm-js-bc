@@ -1,0 +1,23 @@
+{
+  "description": "ZUC test vectors from GM/T 0001-2012 and 3GPP TS 35.221",
+  "testVectors": [
+    {
+      "id": "3GPP TS 35.221 Test Set 1",
+      "key": "00000000000000000000000000000000",
+      "iv": "00000000000000000000000000000000",
+      "keystream": "27bede74018082da87d4da0a"
+    },
+    {
+      "id": "3GPP TS 35.221 Test Set 2",
+      "key": "ffffffffffffffffffffffffffffffff",
+      "iv": "ffffffffffffffffffffffffffffffff",
+      "keystream": "0657cfa07096398b734c0abc"
+    },
+    {
+      "id": "GM/T 0001-2012 Example 1",
+      "key": "00000000000000000000000000000000",
+      "iv": "00000000000000000000000000000000",
+      "keystream": "27bede74018082da"
+    }
+  ]
+}
