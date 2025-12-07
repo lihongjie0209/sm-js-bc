@@ -1,4 +1,4 @@
-import { CipherParameters } from '../CipherParameters';
+import { CipherParameters } from '../params/CipherParameters';
 import { SM9Parameters } from '../params/SM9Parameters';
 import { SM9Hash } from '../SM9Hash';
 import { SM3Digest } from '../digests/SM3Digest';
@@ -186,19 +186,22 @@ export class SM9Signer {
   /**
    * Compute pairing e(P, Q) for P ∈ E(Fp) and Q ∈ E'(Fp2)
    * 
-   * This is a placeholder for the full pairing implementation.
+   * ⚠️ PLACEHOLDER: This is a stub for the full pairing implementation.
    * The actual implementation requires:
-   * - Miller loop algorithm
+   * - Miller loop algorithm (optimal Ate pairing)
    * - Final exponentiation
    * - Line function evaluations
+   * - Frobenius endomorphism
+   * 
+   * TODO: Implement full pairing engine for production use
    * 
    * @param p - Point on E(Fp)
    * @param q - Point coordinates on E'(Fp2)
-   * @returns Result in Fp12 (GT group)
+   * @returns Result in Fp12 (GT group) - currently returns identity element
    */
   private computePairing(p: ECPointFp, q: { x: Fp2Element; y: Fp2Element }): Fp12Element {
-    // This is a placeholder
-    // Full implementation would use optimal Ate pairing
+    // PLACEHOLDER: Returns identity element
+    // This makes signature operations non-functional until pairing is implemented
     return Fp12Element.one(SM9Parameters.P);
   }
 

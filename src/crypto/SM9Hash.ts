@@ -130,7 +130,7 @@ export class SM9Hash {
    * @param fp12 - Fp12 element to serialize
    * @returns Byte array representation
    */
-  static fp12ToBytes(fp12: any): Uint8Array {
+  static fp12ToBytes(fp12: unknown): Uint8Array {
     // For now, return a placeholder
     // Full implementation would serialize all 12 Fp components
     const result = new Uint8Array(384); // 12 * 32 bytes
