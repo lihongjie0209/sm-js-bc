@@ -31,6 +31,13 @@ export { ECPointAbstractFp, ECPointFp } from './math/ec/ECPoint';
 export type { ECMultiplier } from './math/ec/ECMultiplier';
 export { AbstractECMultiplier, FixedPointCombMultiplier, SimpleECMultiplier } from './math/ec/ECMultiplier';
 
+// Extension fields for SM9
+export type { ExtensionFieldElement } from './math/ec/ExtensionField';
+export { ExtensionFieldUtil } from './math/ec/ExtensionField';
+export { Fp2Element } from './math/ec/Fp2Element';
+export { Fp4Element } from './math/ec/Fp4Element';
+export { Fp12Element } from './math/ec/Fp12Element';
+
 // 参数类
 export type { CipherParameters } from './crypto/params/CipherParameters';
 export { AsymmetricKeyParameter } from './crypto/params/AsymmetricKeyParameter';
