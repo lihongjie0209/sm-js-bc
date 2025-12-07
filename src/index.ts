@@ -37,6 +37,7 @@ export { ExtensionFieldUtil } from './math/ec/ExtensionField';
 export { Fp2Element } from './math/ec/Fp2Element';
 export { Fp4Element } from './math/ec/Fp4Element';
 export { Fp12Element } from './math/ec/Fp12Element';
+export { ECPointFp2 } from './math/ec/ECPointFp2';
 
 // 参数类
 export type { CipherParameters } from './crypto/params/CipherParameters';

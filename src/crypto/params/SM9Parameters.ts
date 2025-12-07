@@ -1,6 +1,7 @@
 import { ECCurveFp } from '../../math/ec/ECCurve';
 import { ECPointFp } from '../../math/ec/ECPoint';
 import { Fp2Element } from '../../math/ec/Fp2Element';
+import { ECPointFp2 } from '../../math/ec/ECPointFp2';
 
 /**
  * SM9 Curve Parameters
@@ -124,6 +125,14 @@ export class SM9Parameters {
     const x = new Fp2Element(SM9Parameters.P2_X0, SM9Parameters.P2_X1, SM9Parameters.P);
     const y = new Fp2Element(SM9Parameters.P2_Y0, SM9Parameters.P2_Y1, SM9Parameters.P);
     return { x, y };
+  }
+
+  /**
+   * Get generator P2 on E'(Fp2) as ECPointFp2
+   */
+  static getP2(): ECPointFp2 {
+    const coords = SM9Parameters.getP2Coordinates();
+    return ECPointFp2.fromAffine(coords.x, coords.y, SM9Parameters.P);
   }
 
   /**
