@@ -7,6 +7,7 @@
 | 文件 | 说明 | 对应 README 章节 |
 |------|------|-----------------|
 | `sm3-hash.mjs` | SM3 哈希计算示例 | SM3 哈希 |
+| `hmac-sm3.mjs` | HMAC-SM3 消息认证码示例 | HMAC-SM3 消息认证码 |
 | `sm2-keypair.mjs` | SM2 密钥对生成示例 | SM2 密钥对生成 |
 | `sm2-sign.mjs` | SM2 数字签名示例 | SM2 数字签名 |
 | `sm2-encrypt.mjs` | SM2 公钥加密示例 | SM2 公钥加密 |
@@ -33,6 +34,9 @@ npm install
 # SM3 哈希
 npm run sm3-hash
 
+# HMAC-SM3 消息认证码
+npm run hmac-sm3
+
 # SM2 密钥对生成
 npm run sm2-keypair
 
@@ -56,6 +60,7 @@ npm run sm4-modes
 
 ```bash
 node sm3-hash.mjs
+node hmac-sm3.mjs
 node sm2-keypair.mjs
 node sm4-ecb-simple.mjs
 node sm4-modes.mjs
@@ -78,6 +83,15 @@ npm run all
 - 基本哈希计算
 - 分段数据更新
 - 空数据哈希
+
+### HMAC-SM3 消息认证码示例 (`hmac-sm3.mjs`)
+
+演示如何使用 `HMac` 类生成消息认证码：
+- 基本 HMAC 计算
+- 分段更新数据
+- 重置和重用 HMAC 实例
+- 消息验证
+- 不同密钥长度处理
 
 ### SM2 密钥对生成示例 (`sm2-keypair.mjs`)
 
