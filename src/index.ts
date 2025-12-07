@@ -58,6 +58,8 @@ export { SM2 } from './crypto/SM2';
 
 // SM9
 export { SM9Hash } from './crypto/SM9Hash';
+export { SM9KeyPairGenerator } from './crypto/generators/SM9KeyPairGenerator';
+export type { SM9SignMasterKeyPair, SM9UserSignKey } from './crypto/generators/SM9KeyPairGenerator';
 
 // SM4
 export { SM4 } from './crypto/SM4';
