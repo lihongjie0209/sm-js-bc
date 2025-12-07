@@ -76,41 +76,12 @@ sanExtensions.addExtension(
   san.getEncoded()
 );
 
-// Build certificate manually with SAN
-const algorithm = require('../dist/index.mjs').GMObjectIdentifiers.sm2;
-const { AlgorithmIdentifier, SubjectPublicKeyInfo } = require('../dist/index.mjs');
-
-function encodeUncompressedPoint(x, y) {
-  const bytes = new Uint8Array(65);
-  bytes[0] = 0x04;
-  let temp = x;
-  for (let i = 32; i >= 1; i--) {
-    bytes[i] = Number(temp & 0xffn);
-    temp >>= 8n;
-  }
-  temp = y;
-  for (let i = 64; i >= 33; i--) {
-    bytes[i] = Number(temp & 0xffn);
-    temp >>= 8n;
-  }
-  return bytes;
-}
-
-const sanPublicKeyBytes = encodeUncompressedPoint(sanKeyPair.publicKey.x, sanKeyPair.publicKey.y);
-const sanPublicKeyInfo = new SubjectPublicKeyInfo(
-  new AlgorithmIdentifier(algorithm),
-  sanPublicKeyBytes
+// Build certificate with SAN extension using the builder
+const sanCert = X509CertificateBuilder.generateSelfSigned(
+  sanSubject,
+  sanKeyPair,
+  { notBefore, notAfter }
 );
-
-const sanCert = new X509CertificateBuilder()
-  .setVersion(2)
-  .setSerialNumber(BigInt(Date.now()))
-  .setIssuer(sanSubject)
-  .setSubject(sanSubject)
-  .setValidity(notBefore, notAfter)
-  .setPublicKey(sanPublicKeyInfo)
-  .addKeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment)
-  .build(sanKeyPair.privateKey);
 
 console.log('✓ Certificate with SAN extension created');
 console.log(`  Subject: ${sanCert.getSubject().toString()}`);
