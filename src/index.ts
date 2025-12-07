@@ -10,9 +10,13 @@ export { SecureRandom } from './util/SecureRandom';
 export type { Memoable } from './crypto/Memoable';
 export type { Digest } from './crypto/Digest';
 export type { ExtendedDigest } from './crypto/ExtendedDigest';
+export type { Mac } from './crypto/Mac';
 
 // 摘要算法
 export { SM3Digest } from './crypto/digests/SM3Digest';
+
+// MAC 算法
+export { HMac } from './crypto/macs/HMac';
 
 // 椭圆曲线
 export { ECConstants } from './math/ec/ECConstants';

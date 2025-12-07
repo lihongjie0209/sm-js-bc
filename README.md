@@ -51,6 +51,26 @@ console.log('SM3 Hash:', Buffer.from(hash).toString('hex'));
 
 📖 **完整示例**: [example/sm3-hash.mjs](./example/sm3-hash.mjs)
 
+### HMAC-SM3 消息认证码
+
+```typescript
+import { HMac, SM3Digest, KeyParameter } from 'sm-js-bc';
+
+const hmac = new HMac(new SM3Digest());
+const key = new TextEncoder().encode('my-secret-key');
+const message = new TextEncoder().encode('Hello, HMAC-SM3!');
+
+hmac.init(new KeyParameter(key));
+hmac.updateArray(message, 0, message.length);
+
+const mac = new Uint8Array(hmac.getMacSize());
+hmac.doFinal(mac, 0);
+
+console.log('HMAC:', Buffer.from(mac).toString('hex'));
+```
+
+📖 **完整示例**: [example/hmac-sm3.mjs](./example/hmac-sm3.mjs)
+
 ### SM2 密钥对生成
 
 ```typescript
@@ -212,6 +232,7 @@ console.log('Keys match:',
 | 示例文件 | 说明 | 演示内容 |
 |---------|------|---------|
 | [sm3-hash.mjs](./example/sm3-hash.mjs) | SM3 哈希计算 | 基本哈希、分段更新、空数据处理 |
+| [hmac-sm3.mjs](./example/hmac-sm3.mjs) | HMAC-SM3 消息认证码 | MAC 生成、分段更新、消息验证 |
 | [sm2-keypair.mjs](./example/sm2-keypair.mjs) | SM2 密钥对生成 | 生成密钥对、查看公私钥 |
 | [sm2-sign.mjs](./example/sm2-sign.mjs) | SM2 数字签名 | 签名、验签、错误验证 |
 | [sm2-encrypt.mjs](./example/sm2-encrypt.mjs) | SM2 公钥加密 | 加密、解密、不同长度消息 |
@@ -230,6 +251,7 @@ npm install
 
 # 运行单个示例
 npm run sm3-hash           # SM3 哈希
+npm run hmac-sm3           # HMAC-SM3 消息认证码
 npm run sm2-keypair        # SM2 密钥对生成
 npm run sm2-sign           # SM2 数字签名
 npm run sm2-encrypt        # SM2 公钥加密
