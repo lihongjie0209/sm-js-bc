@@ -66,7 +66,7 @@ export class ZUCEngine implements StreamCipher {
   private keyStreamIndex: number = 0;
 
   // Initialization parameters
-  private initialised: boolean = false;
+  private initialized: boolean = false;
   private workingKey: Uint8Array | null = null;
   private workingIV: Uint8Array | null = null;
 
@@ -101,7 +101,7 @@ export class ZUCEngine implements StreamCipher {
     this.workingIV = new Uint8Array(iv);
 
     this.setKeyAndIV(this.workingKey, this.workingIV);
-    this.initialised = true;
+    this.initialized = true;
   }
 
   /**
@@ -120,8 +120,8 @@ export class ZUCEngine implements StreamCipher {
    * @returns the processed byte
    */
   public returnByte(input: number): number {
-    if (!this.initialised) {
-      throw new Error('ZUC not initialised');
+    if (!this.initialized) {
+      throw new Error('ZUC not initialized');
     }
 
     if (this.keyStreamIndex === 0) {
@@ -149,8 +149,8 @@ export class ZUCEngine implements StreamCipher {
     output: Uint8Array,
     outOff: number
   ): number {
-    if (!this.initialised) {
-      throw new Error('ZUC not initialised');
+    if (!this.initialized) {
+      throw new Error('ZUC not initialized');
     }
 
     if (inOff + len > input.length) {
@@ -179,7 +179,7 @@ export class ZUCEngine implements StreamCipher {
     if (this.workingKey !== null && this.workingIV !== null) {
       this.setKeyAndIV(this.workingKey, this.workingIV);
     }
-    this.initialised = this.workingKey !== null;
+    this.initialized = this.workingKey !== null;
   }
 
   /**

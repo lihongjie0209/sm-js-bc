@@ -257,7 +257,7 @@ describe('ZUCEngine', () => {
       const output = new Uint8Array(16);
 
       expect(() => engine.processBytes(input, 0, 16, output, 0)).toThrow(
-        'ZUC not initialised'
+        'ZUC not initialized'
       );
     });
 
