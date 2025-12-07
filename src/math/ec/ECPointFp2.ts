@@ -146,7 +146,7 @@ export class ECPointFp2 {
     // X3 = R^2 - H3 - 2*U1*H2
     const r2 = r.square() as Fp2Element;
     const u1h2 = u1.multiply(h2) as Fp2Element;
-    const two = Fp2Element.one(this.p).add(Fp2Element.one(this.p)) as Fp2Element;
+    const two = new Fp2Element(2n, 0n, this.p);
     const twoU1H2 = two.multiply(u1h2) as Fp2Element;
     const x3 = r2.subtract(h3).subtract(twoU1H2) as Fp2Element;
 
@@ -173,27 +173,27 @@ export class ECPointFp2 {
     const y1 = this.y;
     const z1 = this.z;
 
+    // Constants
+    const two = new Fp2Element(2n, 0n, this.p);
+    const three = new Fp2Element(3n, 0n, this.p);
+    const four = new Fp2Element(4n, 0n, this.p);
+    const eight = new Fp2Element(8n, 0n, this.p);
+
     // M = 3*X1^2
     const x1Sq = x1.square() as Fp2Element;
-    const three = Fp2Element.one(this.p)
-                    .add(Fp2Element.one(this.p))
-                    .add(Fp2Element.one(this.p)) as Fp2Element;
     const m = three.multiply(x1Sq) as Fp2Element;
 
     // S = 4*X1*Y1^2
     const y1Sq = y1.square() as Fp2Element;
-    const four = three.add(Fp2Element.one(this.p)) as Fp2Element;
     const s = four.multiply(x1).multiply(y1Sq) as Fp2Element;
 
     // X3 = M^2 - 2*S
     const mSq = m.square() as Fp2Element;
-    const two = Fp2Element.one(this.p).add(Fp2Element.one(this.p)) as Fp2Element;
     const twoS = two.multiply(s) as Fp2Element;
     const x3 = mSq.subtract(twoS) as Fp2Element;
 
     // Y3 = M*(S - X3) - 8*Y1^4
     const y1Fourth = y1Sq.square() as Fp2Element;
-    const eight = four.add(four) as Fp2Element;
     const eightY1Fourth = eight.multiply(y1Fourth) as Fp2Element;
     const y3 = m.multiply(s.subtract(x3) as Fp2Element)
                 .subtract(eightY1Fourth) as Fp2Element;

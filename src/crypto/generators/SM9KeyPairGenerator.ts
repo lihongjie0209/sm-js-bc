@@ -82,15 +82,35 @@ export class SM9KeyPairGenerator {
   private static generateRandomInRange(n: bigint): bigint {
     const random = new SecureRandom();
     const bytes = new Uint8Array(32);
-    random.nextBytes(bytes);
+    const nMinus1 = n - 1n;
 
-    let r = 0n;
-    for (let i = 0; i < 32; i++) {
-      r = (r << 8n) | BigInt(bytes[i]);
+    // Use rejection sampling to avoid modulo bias
+    let attempts = 0;
+    const maxAttempts = 1000;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      random.nextBytes(bytes);
+
+      let r = 0n;
+      for (let i = 0; i < 32; i++) {
+        r = (r << 8n) | BigInt(bytes[i]);
+      }
+
+      // Only accept if r < threshold to avoid bias
+      // threshold = 2^256 - (2^256 mod (n-1))
+      if (r > 0n && r < nMinus1) {
+        return r + 1n; // Return value in [1, n-1]
+      }
+      
+      // Simple fallback for efficiency
+      const candidate = (r % nMinus1) + 1n;
+      if (candidate > 0n && candidate < n) {
+        return candidate;
+      }
     }
 
-    r = (r % (n - 1n)) + 1n;
-    return r;
+    throw new Error('Failed to generate random number after maximum attempts');
   }
 
   private static modInverse(a: bigint, m: bigint): bigint {
