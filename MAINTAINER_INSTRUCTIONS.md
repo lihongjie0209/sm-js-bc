@@ -13,7 +13,18 @@ All release preparation has been completed:
 - ✅ Automated publish workflow created
 - ✅ Package verified (no vulnerabilities)
 
-## Quick Start (After Merging PR)
+## ⚠️ IMPORTANT: First-Time Setup Required
+
+**Before pushing the tag**, you must configure the `NPM_TOKEN` secret:
+
+1. Generate an npm automation token at https://www.npmjs.com/settings/~/tokens
+2. Add it to GitHub secrets: https://github.com/lihongjie0209/sm-js-bc/settings/secrets/actions
+   - Name: `NPM_TOKEN`
+   - Value: (your npm token)
+
+See detailed instructions in `.github/workflows/SETUP.md`
+
+## Quick Start (After Setup)
 
 ```bash
 # 1. Checkout main branch and pull latest changes
@@ -24,10 +35,18 @@ git pull origin main
 git tag -a v0.4.0 -m "Release version 0.4.0"
 git push origin v0.4.0
 
-# 3. (Optional) If NPM_TOKEN is configured, the workflow will auto-publish
-# Otherwise, publish manually:
+# The workflow will automatically publish to npm and create a GitHub release
+```
+
+## Alternative: Manual Publishing
+
+If you prefer not to set up automated publishing:
+
+```bash
+git checkout v0.4.0
+npm ci && npm test && npm run build
 npm login
-npm publish
+npm publish --access public
 ```
 
 ## Detailed Steps
