@@ -219,7 +219,8 @@ export class ECPointFp2 {
    * Uses double-and-add algorithm
    */
   multiply(k: bigint): ECPointFp2 {
-    if (k === 0n) {
+    // Handle zero and infinity cases
+    if (k === 0n || this.isInfinity()) {
       return ECPointFp2.infinity(this.p);
     }
     if (k === 1n) {
