@@ -1,0 +1,17 @@
+### Added
+- Comprehensive API consistency audit against Bouncy Castle Java
+- `SM3Digest.reset(Memoable)` method overload for state restoration
+- `SM2Engine.Mode` static property for Java-style enum access
+- `SM2Signer.createBasePointMultiplier()` protected method for extensibility
+- `SM2Signer.calculateE()` protected method matching Java API signature
+- Comprehensive API compatibility test suite (14 new tests)
+- API_CONSISTENCY_AUDIT.md - 537-line detailed audit report
+- API_IMPROVEMENTS.md - Usage guide with migration examples
+
+### Changed
+- Improved API consistency score from 91% to 97%
+- Enhanced `SM2Signer.hashToInteger()` deprecation notice with version timeline
+- Updated documentation structure in docs/README.md
+
+### Deprecated
+- `SM2Signer.hashToInteger()` - Use `calculateE()` instead (will be removed in v1.0.0)
