@@ -1,0 +1,75 @@
+{
+  "description": "SM9 Test Vectors from GM/T 0044-2016",
+  "version": "1.0",
+  "curve": "SM9 BN Curve",
+  "keyGeneration": [
+    {
+      "description": "Master key generation test",
+      "masterId": "master@example.com",
+      "comment": "Test vector for master key pair generation"
+    }
+  ],
+  "userKeyDerivation": [
+    {
+      "description": "User key derivation test",
+      "userId": "alice@example.com",
+      "userIdHex": "616c696365406578616d706le2e636f6d",
+      "hid": "01",
+      "comment": "Derive signing key for user alice@example.com"
+    },
+    {
+      "description": "User key derivation test 2",
+      "userId": "bob@test.org",
+      "userIdHex": "626f6240746573742e6f7267",
+      "hid": "01",
+      "comment": "Derive signing key for user bob@test.org"
+    }
+  ],
+  "signature": [
+    {
+      "description": "Basic signature test",
+      "userId": "test@example.com",
+      "message": "Test message for SM9 signature",
+      "messageHex": "5465737420 6d65737361676520666f7220534d39207369676e6174757265",
+      "comment": "Simple signature generation and verification"
+    }
+  ],
+  "hashFunctions": [
+    {
+      "description": "H1 function test",
+      "input": "alice@example.com",
+      "inputHex": "616c696365406578616d706c652e636f6d",
+      "hid": "01",
+      "comment": "H1 maps identity to field element"
+    },
+    {
+      "description": "H2 function test",
+      "message": "Test message",
+      "messageHex": "54657374206d657373616765",
+      "comment": "H2 maps message and GT element to integer"
+    }
+  ],
+  "extensionFields": [
+    {
+      "description": "Fp2 arithmetic test",
+      "a": {"c0": "3", "c1": "4"},
+      "b": {"c0": "5", "c1": "6"},
+      "operation": "multiply",
+      "comment": "Test (3+4u) * (5+6u) in Fp2"
+    }
+  ],
+  "pairing": [
+    {
+      "description": "Pairing bilinearity test",
+      "comment": "e(aP, Q) should equal e(P, Q)^a",
+      "scalar": "3",
+      "note": "Uses generators P1 and P2 from SM9Parameters"
+    }
+  ],
+  "notes": [
+    "GM/T 0044-2016 specifies complete test vectors in Appendix A",
+    "These are simplified test cases for interoperability testing",
+    "Full standard test vectors should be added from official specification",
+    "Pairing tests are pending optimization of Miller loop and final exponentiation"
+  ]
+}
