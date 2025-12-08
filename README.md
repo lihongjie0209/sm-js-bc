@@ -335,6 +335,7 @@ console.log('Certificate valid:', isValid);
 | [sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs) | SM2 密钥交换 | ECDH 协议、密钥协商 |
 | [sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) | SM4 基础加密 | ECB 模式、PKCS7 填充 |
 | [sm4-modes.mjs](./example/sm4-modes.mjs) | SM4 多种模式 | ECB/CBC/CTR/GCM 对比 |
+| [zuc-encryption.mjs](./example/zuc-encryption.mjs) | ZUC 流密码 🆕 | ZUC-128/256 加密、MAC完整性保护 |
 | [x509-certificate.mjs](./example/x509-certificate.mjs) | X.509 证书 🆕 | 证书生成、签名、验证、PEM编码 |
 | [advanced-pki.mjs](./example/advanced-pki.mjs) | 高级 PKI 🆕 | CSR、SAN、CRL、证书链验证 |
 
@@ -356,6 +357,9 @@ npm run sm2-encrypt        # SM2 公钥加密
 npm run sm2-keyexchange    # SM2 密钥交换
 npm run sm4-ecb-simple     # SM4 基础加密
 npm run sm4-modes          # SM4 多种模式
+npm run zuc-encryption     # ZUC 流密码 🆕
+npm run x509-certificate   # X.509 证书 🆕
+npm run advanced-pki       # 高级 PKI 🆕
 
 # 运行所有示例
 npm run all
