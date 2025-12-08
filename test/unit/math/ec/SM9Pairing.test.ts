@@ -54,9 +54,9 @@ describe('SM9Pairing', () => {
     expect(result.equals(Fp12Element.one(p))).toBe(false);
   });
 
-  // Bilinearity tests require exact GM/T 0044-2016 hard part exponentiation
-  // These are skipped pending official test vectors and formula verification
-  it.skip('should satisfy bilinearity: e(aP, Q) = e(P, Q)^a (requires GM/T formula)', () => {
+  // Bilinearity tests with improved hard part exponentiation
+  // Using optimized BN curve formula from cryptographic literature
+  it('should satisfy bilinearity: e(aP, Q) = e(P, Q)^a', () => {
     const P = SM9Parameters.getP1();
     const Q = SM9Parameters.getP2();
     const a = 3n;
@@ -70,7 +70,7 @@ describe('SM9Pairing', () => {
     expect(left.equals(right)).toBe(true);
   });
 
-  it.skip('should satisfy bilinearity: e(P, aQ) = e(P, Q)^a (requires GM/T formula)', () => {
+  it('should satisfy bilinearity: e(P, aQ) = e(P, Q)^a', () => {
     const P = SM9Parameters.getP1();
     const Q = SM9Parameters.getP2();
     const a = 5n;
@@ -84,7 +84,7 @@ describe('SM9Pairing', () => {
     expect(left.equals(right)).toBe(true);
   });
 
-  it.skip('should satisfy bilinearity: e(P1+P2, Q) = e(P1,Q) * e(P2,Q) (requires GM/T formula)', () => {
+  it('should satisfy bilinearity: e(P1+P2, Q) = e(P1,Q) * e(P2,Q)', () => {
     const P1 = SM9Parameters.getP1();
     const P2 = P1.twice();
     const Q = SM9Parameters.getP2();
@@ -99,7 +99,7 @@ describe('SM9Pairing', () => {
     expect(left.equals(right)).toBe(true);
   });
 
-  it.skip('should satisfy bilinearity: e(P, Q1+Q2) = e(P,Q1) * e(P,Q2) (requires GM/T formula)', () => {
+  it('should satisfy bilinearity: e(P, Q1+Q2) = e(P,Q1) * e(P,Q2)', () => {
     const P = SM9Parameters.getP1();
     const Q1 = SM9Parameters.getP2();
     const Q2 = Q1.twice();
@@ -135,7 +135,7 @@ describe('SM9Pairing', () => {
     expect(result1.equals(result2)).toBe(true);
   });
 
-  it.skip('should verify e(P, Q)^n = identity for n = curve order (requires GM/T formula)', () => {
+  it('should verify e(P, Q)^n = identity for n = curve order', () => {
     const P = SM9Parameters.getP1();
     const Q = SM9Parameters.getP2();
     const n = SM9Parameters.N;
@@ -148,7 +148,7 @@ describe('SM9Pairing', () => {
     expect(result.equals(identity)).toBe(true);
   });
 
-  it.skip('should use verifyBilinearity helper (requires GM/T formula)', () => {
+  it('should use verifyBilinearity helper', () => {
     const P = SM9Parameters.getP1();
     const Q = SM9Parameters.getP2();
     const a = 7n;
