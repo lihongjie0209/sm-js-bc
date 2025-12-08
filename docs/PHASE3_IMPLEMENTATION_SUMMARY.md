@@ -5,9 +5,11 @@
 This document summarizes the implementation of Phase 3 advanced algorithms as specified in `docs/requirements/README.md`. The task was to implement:
 
 1. **ZUC Stream Cipher (Priority: Medium)** - For mobile communication encryption
-2. **SM9 Signature (Priority: Medium)** - For identity-based cryptography
+2. ~~**SM9 Signature (Priority: Medium)**~~ - **NOT IMPLEMENTED** (Bouncy Castle Java does not support SM9)
 
 The highest priority was to maintain interface consistency with Java Bouncy Castle, followed by comprehensive unit tests and cross-language testing.
+
+**Important Note**: SM9 was removed from the scope because Bouncy Castle Java does not have SM9 implementation. This project maintains strict compatibility with BC Java, so only algorithms supported by BC Java are implemented in the JavaScript version.
 
 ## Status
 
