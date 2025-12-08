@@ -21,6 +21,7 @@ import {
   KeyParameter, 
   ParametersWithIV 
 } from '../dist/index.js';
+import crypto from 'crypto';
 
 console.log('='.repeat(70));
 console.log('ZUC Stream Cipher Example');
@@ -281,8 +282,6 @@ console.log();
 // Example of secure key generation (for demonstration)
 console.log('Example: Secure Key Generation (Node.js)');
 console.log('-'.repeat(70));
-
-import crypto from 'crypto';
 
 const secureKey = crypto.randomBytes(16); // 128-bit key
 const secureIV = crypto.randomBytes(16);  // 128-bit IV

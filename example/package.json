@@ -16,7 +16,7 @@
     "zuc-encryption": "node zuc-encryption.mjs",
     "x509-certificate": "node x509-certificate.mjs",
     "advanced-pki": "node advanced-pki.mjs",
-    "all": "npm run sm3-hash && npm run hmac-sm3 && npm run sm2-keypair && npm run sm2-sign && npm run sm2-encrypt && npm run sm2-keyexchange && npm run sm4-ecb-simple && npm run sm4-modes && npm run zuc-encryption && npm run x509-certificate && npm run advanced-pki"
+    "all": "npm run sm3-hash && npm run hmac-sm3 && npm run sm2-keypair && npm run sm2-sign && npm run sm2-encrypt && npm run sm2-keyexchange && npm run sm4-ecb-simple && npm run sm4-modes && npm run zuc-encryption"
   },
   "dependencies": {
     "sm-js-bc": "file:.."
