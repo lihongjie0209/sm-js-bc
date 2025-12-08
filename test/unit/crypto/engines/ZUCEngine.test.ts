@@ -39,8 +39,8 @@ describe('ZUCEngine', () => {
     });
   });
 
-  describe('GM/T 0001-2012 Test Vectors', () => {
-    it('Test Case 1: All zeros', () => {
+  describe('GM/T 0001-2012 and 3GPP TS 35.221 Test Vectors', () => {
+    it('Test Set 1: All zeros (3GPP TS 35.221)', () => {
       const engine = new ZUCEngine();
       const key = new Uint8Array(16); // All zeros
       const iv = new Uint8Array(16);  // All zeros
@@ -48,41 +48,69 @@ describe('ZUCEngine', () => {
 
       engine.init(true, params);
 
-      // Generate 2 keystream words (8 bytes)
-      const output = new Uint8Array(8);
+      // Generate keystream by XORing with zeros
       const input = new Uint8Array(8);
+      const output = new Uint8Array(8);
       
       engine.processBytes(input, 0, 8, output, 0);
 
-      // Expected keystream (from GM/T specification)
-      // Note: These are placeholder values - actual test vectors need to be verified
-      // from the official GM/T 0001-2012 document
-      expect(output.length).toBe(8);
+      // Expected keystream from ZUC specification (3GPP TS 35.221)
+      // First keystream word: 0x27BEDE74
+      // Second keystream word: 0x018082DA
+      const expected = new Uint8Array([
+        0x27, 0xBE, 0xDE, 0x74,  // First word
+        0x01, 0x80, 0x82, 0xDA   // Second word
+      ]);
+      
+      expect(output).toEqual(expected);
     });
 
-    it('Test Case 2: Test vector from 3GPP TS 35.221', () => {
+    it('Test Set 2: All ones (3GPP TS 35.221)', () => {
       const engine = new ZUCEngine();
       
-      // Test vector from 3GPP TS 35.221 section 4
-      const key = new Uint8Array([
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-      ]);
-      const iv = new Uint8Array([
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-      ]);
+      const key = new Uint8Array(16).fill(0xFF);
+      const iv = new Uint8Array(16).fill(0xFF);
       
       const params = new ParametersWithIV(new KeyParameter(key), iv);
       engine.init(true, params);
 
-      const input = new Uint8Array(4);
-      const output = new Uint8Array(4);
+      const input = new Uint8Array(8);
+      const output = new Uint8Array(8);
       
-      engine.processBytes(input, 0, 4, output, 0);
+      engine.processBytes(input, 0, 8, output, 0);
       
-      // The output should be deterministic for given key and IV
-      expect(output.length).toBe(4);
+      // Expected keystream from ZUC specification (3GPP TS 35.221)
+      // First keystream word: 0x0657CFA0
+      // Second keystream word: 0x7096398B
+      const expected = new Uint8Array([
+        0x06, 0x57, 0xCF, 0xA0,  // First word
+        0x70, 0x96, 0x39, 0x8B   // Second word
+      ]);
+      
+      expect(output).toEqual(expected);
+    });
+
+    it('Test Case: First 2 words (GM/T 0001-2012)', () => {
+      const engine = new ZUCEngine();
+      
+      const key = new Uint8Array(16); // All zeros
+      const iv = new Uint8Array(16);  // All zeros
+      
+      const params = new ParametersWithIV(new KeyParameter(key), iv);
+      engine.init(true, params);
+
+      const input = new Uint8Array(8);
+      const output = new Uint8Array(8);
+      
+      engine.processBytes(input, 0, 8, output, 0);
+      
+      // Expected first 8 bytes from GM/T 0001-2012
+      const expected = new Uint8Array([
+        0x27, 0xBE, 0xDE, 0x74,  // First keystream word
+        0x01, 0x80, 0x82, 0xDA   // Second keystream word
+      ]);
+      
+      expect(output).toEqual(expected);
     });
   });
 
