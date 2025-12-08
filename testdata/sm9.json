@@ -13,7 +13,7 @@
     {
       "description": "User key derivation test",
       "userId": "alice@example.com",
-      "userIdHex": "616c696365406578616d706le2e636f6d",
+      "userIdHex": "616c696365406578616d706c652e636f6d",
       "hid": "01",
       "comment": "Derive signing key for user alice@example.com"
     },
@@ -30,7 +30,7 @@
       "description": "Basic signature test",
       "userId": "test@example.com",
       "message": "Test message for SM9 signature",
-      "messageHex": "5465737420 6d65737361676520666f7220534d39207369676e6174757265",
+      "messageHex": "546573742056657373616765666f7220534d39207369676e6174757265",
       "comment": "Simple signature generation and verification"
     }
   ],
