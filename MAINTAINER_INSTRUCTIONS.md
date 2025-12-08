@@ -15,12 +15,17 @@ All release preparation has been completed:
 
 ## ⚠️ IMPORTANT: First-Time Setup Required
 
-**Before pushing the tag**, you must configure the `NPM_TOKEN` secret:
+**Before pushing the tag**, you must configure npm authentication:
 
-1. Generate an npm automation token at https://www.npmjs.com/settings/~/tokens
-2. Add it to GitHub secrets: https://github.com/lihongjie0209/sm-js-bc/settings/secrets/actions
-   - Name: `NPM_TOKEN`
-   - Value: (your npm token)
+### Recommended: npm Trusted Publishers (OIDC) ✨
+
+1. Go to https://www.npmjs.com/package/sm-js-bc/access
+2. Add trusted publisher for GitHub Actions:
+   - Organization: `lihongjie0209`
+   - Repository: `sm-js-bc`
+   - Workflow: `publish.yml`
+
+**No secrets needed!** The workflow uses secure OIDC authentication.
 
 See detailed instructions in `.github/workflows/SETUP.md`
 

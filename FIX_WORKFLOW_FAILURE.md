@@ -12,13 +12,40 @@ Workflow URL: https://github.com/lihongjie0209/sm-js-bc/actions/runs/20021037128
 
 ## Root Cause
 
-The `NPM_TOKEN` secret is not configured in GitHub repository settings.
+npm authentication is not configured. The workflow needs either:
+- npm Trusted Publishers (OIDC) - **Recommended** ✨
+- Or NPM_TOKEN secret (traditional method)
 
 ## Solution
 
 Choose one of the following options:
 
-### Option 1: Configure Automated Publishing (Recommended)
+### Option 1: Configure npm Trusted Publishers (OIDC) - **Recommended** ✨
+
+**This is more secure and doesn't require storing secrets!**
+
+1. **Configure on npmjs.com:**
+   - Visit: https://www.npmjs.com/package/sm-js-bc/access
+   - Under "Publishing access" → Click "Add trusted publisher"
+   - Select "GitHub Actions"
+   - Fill in:
+     - **Organization/User**: `lihongjie0209`
+     - **Repository**: `sm-js-bc`
+     - **Workflow filename**: `publish.yml`
+   - Click "Add"
+
+2. **Push changes and re-run:**
+   ```bash
+   # The workflow has been updated to support OIDC
+   git pull origin master
+   git push origin v0.4.0  # Re-push the tag or re-run the workflow
+   ```
+
+3. **Or re-run the existing workflow:**
+   - Visit: https://github.com/lihongjie0209/sm-js-bc/actions/runs/20021037128
+   - Click "Re-run all jobs"
+
+### Option 2: Use NPM_TOKEN (Traditional Method)
 
 1. **Generate npm token:**
    - Visit: https://www.npmjs.com/settings/lihongjie0209/tokens
@@ -32,9 +59,13 @@ Choose one of the following options:
    - Value: (paste your token)
    - Click "Add secret"
 
-3. **Re-run the workflow:**
-   - Visit: https://github.com/lihongjie0209/sm-js-bc/actions/runs/20021037128
-   - Click "Re-run all jobs"
+3. **Update the workflow file** to use the token:
+   ```yaml
+   - name: Publish to npm
+     run: npm publish --provenance --access public
+     env:
+       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+   ```
 
 ### Option 2: Publish Manually
 

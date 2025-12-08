@@ -33,19 +33,8 @@ jobs:
       - name: Build package
         run: npm run build
       
-      - name: Check NPM_TOKEN
-        run: |
-          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "::error::NPM_TOKEN secret is not configured!"
-            echo "::error::Please follow the setup instructions in .github/workflows/SETUP.md"
-            echo "::error::Or publish manually using: npm login && npm publish"
-            exit 1
-          fi
-      
-      - name: Publish to npm
+      - name: Publish to npm (with OIDC/Trusted Publishers)
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
       - name: Extract version from tag
         id: version

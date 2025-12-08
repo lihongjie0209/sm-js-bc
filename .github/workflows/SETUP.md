@@ -1,20 +1,51 @@
 # GitHub Actions Workflow Setup
 
-## Required Secrets
+## Recommended: npm Trusted Publishers (OIDC)
 
-To enable automated publishing to npm, you need to configure the following secret in your GitHub repository:
+**This workflow is configured to use npm Trusted Publishers** - a more secure authentication method that doesn't require storing tokens.
 
-### NPM_TOKEN
+### Setup Steps:
 
-This token is required for the `publish.yml` workflow to publish packages to npm.
+1. **Configure Trusted Publisher on npmjs.com:**
+   - Go to your package settings: https://www.npmjs.com/package/sm-js-bc/access
+   - Under "Publishing access" → Click "Add trusted publisher"
+   - Select "GitHub Actions"
+   - Fill in:
+     - **Organization/User**: `lihongjie0209`
+     - **Repository**: `sm-js-bc`
+     - **Workflow filename**: `publish.yml`
+     - **Environment** (optional): leave empty
+   - Click "Add"
 
-#### Setup Steps:
+2. **Verify permissions in workflow:**
+   - The workflow already has `id-token: write` permission ✅
+   - This enables OIDC authentication
+
+3. **Test the workflow:**
+   - Push a version tag: `git push origin v0.4.0`
+   - The workflow will automatically authenticate using OIDC
+   - No tokens needed! 🎉
+
+### Benefits of Trusted Publishers
+
+- ✅ **No token management** - no secrets to store or rotate
+- ✅ **More secure** - temporary credentials that can't be leaked
+- ✅ **Automatic provenance** - better supply chain security
+- ✅ **Simpler setup** - just configure once on npmjs.com
+
+---
+
+## Alternative: Classic Authentication with NPM_TOKEN
+
+If you prefer to use the traditional token-based authentication:
+
+### Setup Steps:
 
 1. **Generate an npm token:**
-   - Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens
+   - Go to https://www.npmjs.com/settings/lihongjie0209/tokens
    - Click "Generate New Token"
    - Select "Automation" token type
-   - Copy the generated token (it starts with `npm_...`)
+   - Copy the generated token (starts with `npm_...`)
 
 2. **Add token to GitHub repository:**
    - Go to https://github.com/lihongjie0209/sm-js-bc/settings/secrets/actions
@@ -23,10 +54,15 @@ This token is required for the `publish.yml` workflow to publish packages to npm
    - Value: (paste your npm token)
    - Click "Add secret"
 
-3. **Verify setup:**
-   - Push a version tag (e.g., `git push origin v0.4.0`)
-   - The workflow should automatically run and publish to npm
-   - Check the workflow run at: https://github.com/lihongjie0209/sm-js-bc/actions
+3. **Update the workflow:**
+   - Modify `.github/workflows/publish.yml`
+   - Change the publish step to:
+   ```yaml
+   - name: Publish to npm
+     run: npm publish --provenance --access public
+     env:
+       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+   ```
 
 ## Current Issue
 
