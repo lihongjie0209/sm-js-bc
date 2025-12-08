@@ -188,14 +188,15 @@ export class ZUCEngine implements StreamCipher {
   private setKeyAndIV(key: Uint8Array, iv: Uint8Array): void {
     // Load key and IV into LFSR
     // The loading sequence is defined in the ZUC specification
-    const d = new Uint8Array([
-      0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f
+    // EK_d constants from Bouncy Castle Java (16-bit values)
+    const EK_d = new Uint16Array([
+      0x44D7, 0x26BC, 0x626B, 0x135E, 0x5789, 0x35E2, 0x7135, 0x09AF,
+      0x4D78, 0x2F13, 0x6BC4, 0x1AF1, 0x5E26, 0x3C4D, 0x789A, 0x47AC
     ]);
 
     for (let i = 0; i < 16; i++) {
       this.LFSR[i] = this.makeU31(
-        (key[i] << 23) | (d[i] << 8) | iv[i]
+        (key[i] << 23) | (EK_d[i] << 8) | iv[i]
       );
     }
 
@@ -222,47 +223,65 @@ export class ZUCEngine implements StreamCipher {
   }
 
   /**
+   * Addition in GF(2^31-1).
+   * This performs modular addition in the field GF(2^31-1).
+   */
+  private AddM(a: number, b: number): number {
+    const c = (a + b) >>> 0;
+    return ((c & 0x7fffffff) + (c >>> 31)) & 0x7fffffff;
+  }
+
+  /**
    * LFSR in initialization mode.
+   * Uses the complete ZUC specification with five LFSR taps: indices 0, 4, 10, 13, 15
    */
   private LFSRWithInitMode(u: number): void {
-    const s16 = this.LFSR[15];
-    const s0 = this.LFSR[0];
+    let f = this.LFSR[0];
+    let v = this.mulByPow2(this.LFSR[0], 8);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[4], 20);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[10], 21);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[13], 17);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[15], 15);
+    f = this.AddM(f, v);
     
-    const v = this.makeU31(
-      (s0 << 8) ^ this.mulByPow2(s0, 20) ^ 
-      (s16 << 21) ^ this.mulByPow2(s16, 17) ^ 
-      this.mulByPow2(s16, 15)
-    );
-    
-    const s16mod = this.makeU31(s16 + u);
+    // Add u for initialization mode
+    f = this.AddM(f, u);
     
     // Shift LFSR
     for (let i = 0; i < 15; i++) {
       this.LFSR[i] = this.LFSR[i + 1];
     }
     
-    this.LFSR[15] = this.makeU31(v + s16mod);
+    this.LFSR[15] = f;
   }
 
   /**
    * LFSR in working mode.
+   * Uses the complete ZUC specification with five LFSR taps: indices 0, 4, 10, 13, 15
    */
   private LFSRWithWorkMode(): void {
-    const s16 = this.LFSR[15];
-    const s0 = this.LFSR[0];
-    
-    const v = this.makeU31(
-      (s0 << 8) ^ this.mulByPow2(s0, 20) ^ 
-      (s16 << 21) ^ this.mulByPow2(s16, 17) ^ 
-      this.mulByPow2(s16, 15)
-    );
+    let f = this.LFSR[0];
+    let v = this.mulByPow2(this.LFSR[0], 8);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[4], 20);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[10], 21);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[13], 17);
+    f = this.AddM(f, v);
+    v = this.mulByPow2(this.LFSR[15], 15);
+    f = this.AddM(f, v);
     
     // Shift LFSR
     for (let i = 0; i < 15; i++) {
       this.LFSR[i] = this.LFSR[i + 1];
     }
     
-    this.LFSR[15] = this.makeU31(v + s16);
+    this.LFSR[15] = f;
   }
 
   /**
@@ -319,11 +338,12 @@ export class ZUCEngine implements StreamCipher {
 
   /**
    * Nonlinear function F.
+   * W = (X0 ^ R1) + R2 (note: addition, not XOR for the final operation)
    */
   private F(): number {
     const [X0, X1, X2, X3] = this.BitReorganization();
 
-    const W = (X0 ^ this.R1 ^ this.R2) >>> 0;
+    const W = ((X0 ^ this.R1) + this.R2) >>> 0;
     const W1 = (this.R1 + X1) >>> 0;
     const W2 = this.R2 ^ X2;
 
