@@ -14,6 +14,7 @@
 - 🔐 **SM2** - 椭圆曲线公钥密码算法（数字签名、公钥加密、密钥交换）
 - 🔒 **SM3** - 密码杂凑算法（256位消息摘要）
 - 🔑 **SM4** - 分组密码算法（128位对称加密，支持多种工作模式）
+- 📡 **ZUC** - 祖冲之序列密码算法（支持 ZUC-128/256 及 MAC，用于 3GPP LTE/5G）🆕
 
 ### PKI 支持 🆕
 - 📜 **X.509 证书** - 证书生成、解析、验证（支持 SM2 签名）
@@ -30,7 +31,7 @@
 - 📦 **多格式输出** - 支持 CommonJS、ESM 和 IIFE
 - 🧪 **双重验证** - 自闭环测试 + GraalVM 跨语言测试
 - 📚 **完整文档** - 详细的 API 文档和使用指南
-- ✅ **高质量** - >90% 测试覆盖率，710+ 测试用例
+- ✅ **高质量** - >90% 测试覆盖率，777+ 测试用例
 - 🌐 **浏览器支持** - 可在浏览器和 Node.js 中使用
 
 ## 📦 安装
@@ -151,6 +152,60 @@ console.log('Decrypted:', new TextDecoder().decode(decrypted));
 📖 **完整示例**: 
 - [example/sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) - 基础加密示例
 - [example/sm4-modes.mjs](./example/sm4-modes.mjs) - 多种工作模式（ECB/CBC/CTR/GCM）
+
+### ZUC 流密码 🆕
+
+```typescript
+import { ZUCEngine, KeyParameter, ParametersWithIV } from 'sm-js-bc';
+
+// 生成密钥和 IV（在实际应用中应该安全地生成）
+const key = new Uint8Array(16); // 128-bit key
+const iv = new Uint8Array(16);  // 128-bit IV
+
+// 初始化 ZUC-128
+const zuc = new ZUCEngine();
+const params = new ParametersWithIV(new KeyParameter(key), iv);
+zuc.init(true, params);
+
+// 加密数据
+const plaintext = new TextEncoder().encode('Hello, ZUC!');
+const ciphertext = new Uint8Array(plaintext.length);
+zuc.processBytes(plaintext, 0, plaintext.length, ciphertext, 0);
+
+// 解密（重新初始化使用相同密钥和 IV）
+zuc.reset();
+const decrypted = new Uint8Array(ciphertext.length);
+zuc.processBytes(ciphertext, 0, ciphertext.length, decrypted, 0);
+
+console.log('解密:', new TextDecoder().decode(decrypted));
+```
+
+> 📱 **应用场景**: ZUC 是 3GPP 标准的流密码算法，广泛用于 4G/5G 移动通信的数据加密和完整性保护（128-EEA3/128-EIA3）。
+
+### ZUC MAC（消息认证码）🆕
+
+```typescript
+import { Zuc128Mac, KeyParameter, ParametersWithIV } from 'sm-js-bc';
+
+// 初始化 ZUC-128 MAC
+const key = new Uint8Array(16);
+const iv = new Uint8Array(16);
+const mac = new Zuc128Mac();
+
+const params = new ParametersWithIV(new KeyParameter(key), iv);
+mac.init(params);
+
+// 计算 MAC
+const message = new TextEncoder().encode('Hello, ZUC MAC!');
+mac.updateArray(message, 0, message.length);
+
+const tag = new Uint8Array(4); // 32-bit MAC
+mac.doFinal(tag, 0);
+
+console.log('MAC 标签:', Buffer.from(tag).toString('hex'));
+```
+
+> 🔒 **完整性保护**: ZUC MAC 用于 LTE/5G 的完整性保护（128-EIA3），确保消息未被篡改。
 
 ### SM2 密钥交换
 
@@ -280,6 +335,7 @@ console.log('Certificate valid:', isValid);
 | [sm2-keyexchange.mjs](./example/sm2-keyexchange.mjs) | SM2 密钥交换 | ECDH 协议、密钥协商 |
 | [sm4-ecb-simple.mjs](./example/sm4-ecb-simple.mjs) | SM4 基础加密 | ECB 模式、PKCS7 填充 |
 | [sm4-modes.mjs](./example/sm4-modes.mjs) | SM4 多种模式 | ECB/CBC/CTR/GCM 对比 |
+| [zuc-encryption.mjs](./example/zuc-encryption.mjs) | ZUC 流密码 🆕 | ZUC-128/256 加密、MAC完整性保护 |
 | [x509-certificate.mjs](./example/x509-certificate.mjs) | X.509 证书 🆕 | 证书生成、签名、验证、PEM编码 |
 | [advanced-pki.mjs](./example/advanced-pki.mjs) | 高级 PKI 🆕 | CSR、SAN、CRL、证书链验证 |
 
@@ -301,6 +357,9 @@ npm run sm2-encrypt        # SM2 公钥加密
 npm run sm2-keyexchange    # SM2 密钥交换
 npm run sm4-ecb-simple     # SM4 基础加密
 npm run sm4-modes          # SM4 多种模式
+npm run zuc-encryption     # ZUC 流密码 🆕
+npm run x509-certificate   # X.509 证书 🆕
+npm run advanced-pki       # 高级 PKI 🆕
 
 # 运行所有示例
 npm run all

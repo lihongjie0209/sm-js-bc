@@ -14,6 +14,9 @@
 | `sm2-keyexchange.mjs` | SM2 密钥交换示例 | SM2 密钥交换 |
 | `sm4-ecb-simple.mjs` | SM4 ECB 模式简单示例 | SM4 对称加密 |
 | `sm4-modes.mjs` | SM4 多种工作模式示例 | SM4 高级用法 |
+| `zuc-encryption.mjs` | ZUC 流密码示例 🆕 | ZUC 流密码 |
+| `x509-certificate.mjs` | X.509 证书示例 | X.509 证书 |
+| `advanced-pki.mjs` | 高级 PKI 示例 | 高级 PKI |
 
 ## 🚀 快速开始
 
@@ -54,6 +57,15 @@ npm run sm4-ecb-simple
 
 # SM4 多种工作模式示例
 npm run sm4-modes
+
+# ZUC 流密码示例 🆕
+npm run zuc-encryption
+
+# X.509 证书示例
+npm run x509-certificate
+
+# 高级 PKI 示例
+npm run advanced-pki
 ```
 
 #### 或者直接使用 node 命令
