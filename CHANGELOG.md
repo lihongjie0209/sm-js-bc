@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-12-08
+
 ### Added
 - Comprehensive API consistency audit against Bouncy Castle Java
 - `SM3Digest.reset(Memoable)` method overload for state restoration
