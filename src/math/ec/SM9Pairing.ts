@@ -271,7 +271,7 @@ export class SM9Pairing {
     // where the curve order is N = 36*u^4 + 36*u^3 + 24*u^2 + 6*u + 1
     
     // BN curve parameter u for SM9 (derived from trace)
-    // For SM9: t = 6u + 2, so u = (t-2)/6
+    // Approximation: u ≈ (t-1)/6 where t is the Ate pairing parameter
     const u = (this.t - 1n) / 6n;
     
     // Compute Frobenius powers
