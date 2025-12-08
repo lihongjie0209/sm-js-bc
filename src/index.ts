@@ -31,14 +31,7 @@ export { ECPointAbstractFp, ECPointFp } from './math/ec/ECPoint';
 export type { ECMultiplier } from './math/ec/ECMultiplier';
 export { AbstractECMultiplier, FixedPointCombMultiplier, SimpleECMultiplier } from './math/ec/ECMultiplier';
 
-// Extension fields for SM9
-export type { ExtensionFieldElement } from './math/ec/ExtensionField';
-export { ExtensionFieldUtil } from './math/ec/ExtensionField';
-export { Fp2Element } from './math/ec/Fp2Element';
-export { Fp4Element } from './math/ec/Fp4Element';
-export { Fp12Element } from './math/ec/Fp12Element';
-export { ECPointFp2 } from './math/ec/ECPointFp2';
-export { SM9Pairing } from './math/ec/SM9Pairing';
+
 
 // 参数类
 export type { CipherParameters } from './crypto/params/CipherParameters';
@@ -49,7 +42,7 @@ export { ECPublicKeyParameters } from './crypto/params/ECPublicKeyParameters';
 export { ECPrivateKeyParameters } from './crypto/params/ECPrivateKeyParameters';
 export { ParametersWithRandom } from './crypto/params/ParametersWithRandom';
 export { ParametersWithID } from './crypto/params/ParametersWithID';
-export { SM9Parameters, SM9DomainParameters } from './crypto/params/SM9Parameters';
+
 
 // KDF
 export { KDF } from './crypto/kdf/KDF';
@@ -57,10 +50,7 @@ export { KDF } from './crypto/kdf/KDF';
 // SM2
 export { SM2 } from './crypto/SM2';
 
-// SM9
-export { SM9Hash } from './crypto/SM9Hash';
-export { SM9KeyPairGenerator } from './crypto/generators/SM9KeyPairGenerator';
-export type { SM9SignMasterKeyPair, SM9UserSignKey } from './crypto/generators/SM9KeyPairGenerator';
+
 
 // SM4
 export { SM4 } from './crypto/SM4';
@@ -90,7 +80,6 @@ export { Zuc256Engine } from './crypto/engines/Zuc256Engine';
 
 // 签名器
 export { SM2Signer } from './crypto/signers/SM2Signer';
-export { SM9Signer } from './crypto/signers/SM9Signer';
 
 // 异常
 export { CryptoException } from './exceptions/CryptoException';
