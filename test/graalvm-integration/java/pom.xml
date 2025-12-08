@@ -20,7 +20,7 @@
         
         <!-- Versions -->
         <junit.version>5.10.0</junit.version>
-        <bouncy-castle.version>1.77</bouncy-castle.version>
+        <bouncy-castle.version>1.78</bouncy-castle.version>
         <graalvm.version>23.1.1</graalvm.version>
         <jackson.version>2.15.2</jackson.version>
         <maven-surefire.version>3.1.2</maven-surefire.version>

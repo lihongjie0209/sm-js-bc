@@ -1,6 +1,6 @@
 package com.sm.bc.graalvm;
 
-import org.bouncycastle.crypto.engines.ZucEngine;
+import org.bouncycastle.crypto.engines.Zuc128Engine;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -36,7 +36,7 @@ public class ZUCEngineInteropTest extends BaseGraalVMTest {
      * Encrypt using Java Bouncy Castle ZUC
      */
     private String encryptJavaZUC(byte[] key, byte[] iv, String plaintext) {
-        ZucEngine zuc = new ZucEngine();
+        Zuc128Engine zuc = new Zuc128Engine();
         zuc.init(true, new ParametersWithIV(new KeyParameter(key), iv));
         
         byte[] input = Hex.decode(plaintext);
