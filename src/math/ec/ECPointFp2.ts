@@ -229,8 +229,8 @@ export class ECPointFp2 {
       return this.negate().multiply(-k);
     }
 
-    let result = ECPointFp2.infinity(this.p);
-    let addend = this;
+    let result: ECPointFp2 = ECPointFp2.infinity(this.p);
+    let addend: ECPointFp2 = this;
     let scalar = k;
 
     while (scalar > 0n) {

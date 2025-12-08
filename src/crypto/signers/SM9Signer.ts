@@ -205,7 +205,8 @@ export class SM9Signer {
    */
   private generateRandomInRange(n: bigint): bigint {
     const bytes = new Uint8Array(32);
-    SecureRandom.getRandomBytes(bytes);
+    const random = new SecureRandom();
+    random.nextBytes(bytes);
 
     let r = 0n;
     for (let i = 0; i < 32; i++) {

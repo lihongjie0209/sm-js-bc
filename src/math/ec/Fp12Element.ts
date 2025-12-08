@@ -315,19 +315,18 @@ export class Fp12Element implements ExtensionFieldElement {
       return this;
     }
     if (exponent < 0n) {
-      return this.invert().pow(-exponent);
+      return (this.invert() as Fp12Element).pow(-exponent);
     }
 
-    let result = Fp12Element.one(this.p);
-    let base = this;
+    let result: Fp12Element = Fp12Element.one(this.p);
+    let base: Fp12Element = this;
     let exp = exponent;
 
     while (exp > 0n) {
       if (exp & 1n) {
         result = result.multiply(base) as Fp12Element;
       }
-      const squared = base.square() as Fp12Element;
-      base = squared;
+      base = base.square() as Fp12Element;
       exp = exp >> 1n;
     }
 

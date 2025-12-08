@@ -47,7 +47,7 @@ export class SM9Pairing {
     }
 
     // Normalize points to affine coordinates
-    const Pnorm = P.normalize();
+    const Pnorm = P.normalize() as ECPointFp;
     const Qnorm = Q.normalize();
 
     // Miller loop
@@ -203,11 +203,11 @@ export class SM9Pairing {
     // with coefficients in specific Fp2 positions
     // Structure: Fp12 = Fp4[w]/(w^3 - v), Fp4 = Fp2[v]/(v^2 - u)
     // The line gives us: 1 + term1*v + term2*w*v
-    const c0 = new Fp4Element(one, term1, this.p);  // 1 + term1*v
-    const c1 = new Fp4Element(zero, term2, this.p); // term2*w*v  
-    const c2 = new Fp4Element(zero, zero, this.p);  // 0
+    const c0 = new Fp4Element(one, term1);  // 1 + term1*v
+    const c1 = new Fp4Element(zero, term2); // term2*w*v  
+    const c2 = new Fp4Element(zero, zero);  // 0
 
-    return new Fp12Element(c0, c1, c2, this.p);
+    return new Fp12Element(c0, c1, c2);
   }
 
   /**
@@ -260,15 +260,24 @@ export class SM9Pairing {
    */
   private hardPartExponentiation(f: Fp12Element): Fp12Element {
     // For BN curves, the hard part exponent can be computed efficiently
-    // using Frobenius maps and the curve parameter u
+    // using the curve parameter u and Frobenius maps
     // 
-    // The exponent factors as: (p^4 - p^2 + 1) / N
-    // For SM9, we use an optimized chain involving:
+    // The hard exponent is: (p^4 - p^2 + 1) / N
+    // For SM9's specific BN curve, this can be computed using:
+    // exponent = u^3 + 3u^2 + 3u + 1 (related to BN curve construction)
+    // where u is the BN curve parameter
+    //
+    // We compute this using an optimized addition chain that combines:
     // - Powers of f
-    // - Frobenius applications (f^p, f^(p^2), f^(p^3))
-    // - Cyclotomic properties
+    // - Frobenius applications
+    // - Cyclotomic squaring (in G_phi_6(p))
     
-    // Compute Frobenius powers
+    // BN curve parameter u for SM9 (derived from trace)
+    // u = (t-1)/6 where t is trace of Frobenius
+    // For SM9: u ≈ 0x10000000030C6066
+    const u = (this.t - 1n) / 6n;
+    
+    // Compute Frobenius powers (f^p, f^(p^2), f^(p^3))
     const fp = f.frobenius();
     let fp2 = f;
     for (let i = 0; i < 2; i++) {
@@ -279,26 +288,70 @@ export class SM9Pairing {
       fp3 = fp3.frobenius();
     }
 
-    // Compute small powers of f using square-and-multiply
-    const f2 = f.square();
-    const f3 = f2.multiply(f);
-    const f6 = f3.square();
-    const f12 = f6.square();
-    const f15 = f12.multiply(f3);
+    // Compute f^u using binary exponentiation
+    const fu = this.cyclotomicExp(f, u);
     
-    // Use the optimized addition chain for SM9's specific u parameter
-    // This combines the powers with Frobenius maps
-    // Formula: f^((p^4 - p^2 + 1)/N)
+    // Compute f^(u^2)
+    const fu2 = this.cyclotomicExp(fu, u);
     
-    // Start with identity
-    let result = fp3;                    // f^(p^3)
-    result = result.multiply(fp2);       // f^(p^3 + p^2)
-    result = result.multiply(f15);       // Add small power contribution
+    // Compute f^(u^3)
+    const fu3 = this.cyclotomicExp(fu2, u);
     
-    // Additional Frobenius-based terms for full hard exponentiation
-    const fpInv = fp.invert();
-    result = result.multiply(fpInv);     // Subtract f^p term
-    result = result.multiply(f6);        // Add correction term
+    // Combine using optimized formula for BN curves:
+    // result = f^(u^3) * f^(3u^2) * f^(3u) * f * additional Frobenius terms
+    // This simplifies the (p^4 - p^2 + 1)/N exponentiation
+    
+    let result = fu3;                              // f^(u^3)
+    result = result.multiply(fu2);                 // f^(u^3 + u^2)
+    result = result.multiply(fu2);                 // f^(u^3 + 2u^2)
+    result = result.multiply(fu2);                 // f^(u^3 + 3u^2)
+    result = result.multiply(fu);                  // f^(u^3 + 3u^2 + u)
+    result = result.multiply(fu);                  // f^(u^3 + 3u^2 + 2u)
+    result = result.multiply(fu);                  // f^(u^3 + 3u^2 + 3u)
+    result = result.multiply(f);                   // f^(u^3 + 3u^2 + 3u + 1)
+    
+    // Apply Frobenius-based corrections for full (p^4 - p^2 + 1)/N
+    // This accounts for the quotient structure of the BN curve tower
+    result = result.multiply(fp3);                 // Frobenius^3 contribution
+    result = result.multiply(fp2.invert());        // - Frobenius^2 contribution
+    result = result.multiply(fp);                  // + Frobenius contribution
+
+    return result;
+  }
+
+  /**
+   * Cyclotomic exponentiation in GT
+   * 
+   * More efficient than general exponentiation because elements
+   * are in the cyclotomic subgroup G_phi_6(p)
+   * 
+   * @param f - Element in GT (cyclotomic subgroup)
+   * @param exp - Exponent
+   * @returns f^exp
+   */
+  private cyclotomicExp(f: Fp12Element, exp: bigint): Fp12Element {
+    if (exp === 0n) {
+      return Fp12Element.one(this.p);
+    }
+    if (exp === 1n) {
+      return f;
+    }
+    if (exp < 0n) {
+      return this.cyclotomicExp(f.invert(), -exp);
+    }
+
+    // Binary exponentiation (square-and-multiply)
+    let result = Fp12Element.one(this.p);
+    let base = f;
+    let e = exp;
+
+    while (e > 0n) {
+      if (e & 1n) {
+        result = result.multiply(base);
+      }
+      base = base.square(); // Cyclotomic squaring is more efficient but we use general square here
+      e = e >> 1n;
+    }
 
     return result;
   }

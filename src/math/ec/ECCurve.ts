@@ -581,6 +581,31 @@ export class ECCurveFp extends ECCurveAbstractFp {
   }
 
   /**
+   * Check if a point (x, y) is on this curve
+   * 
+   * Verifies: y^2 = x^3 + ax + b (mod p)
+   * 
+   * @param point - The point to check
+   * @returns true if point is on the curve or is infinity
+   */
+  isOnCurve(point: ECPoint): boolean {
+    if (point.isInfinity()) {
+      return true;
+    }
+
+    // Get affine coordinates
+    const norm = point.normalize();
+    const x = norm.getXCoord();
+    const y = norm.getYCoord();
+
+    // Check: y^2 = x^3 + ax + b
+    const lhs = y.square();
+    const rhs = x.square().add(this.a).multiply(x).add(this.b);
+
+    return lhs.toBigInteger() === rhs.toBigInteger();
+  }
+
+  /**
    * Import a point, with optimization for Jacobian coordinates.
    */
   importPoint(p: ECPoint): ECPoint {

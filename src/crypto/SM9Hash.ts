@@ -34,7 +34,7 @@ export class SM9Hash {
 
     // Hash using SM3
     const digest = new SM3Digest();
-    digest.update(message, 0, message.length);
+    digest.updateArray(message, 0, message.length);
     const ha1 = new Uint8Array(32);
     digest.doFinal(ha1, 0);
 
@@ -71,7 +71,7 @@ export class SM9Hash {
 
     // Hash using SM3
     const digest = new SM3Digest();
-    digest.update(input, 0, input.length);
+    digest.updateArray(input, 0, input.length);
     const ha2 = new Uint8Array(32);
     digest.doFinal(ha2, 0);
 
@@ -110,7 +110,7 @@ export class SM9Hash {
       Pack.intToBigEndian(ct, input, Z.length);
 
       const digest = new SM3Digest();
-      digest.update(input, 0, input.length);
+      digest.updateArray(input, 0, input.length);
       const ha = new Uint8Array(v);
       digest.doFinal(ha, 0);
 
