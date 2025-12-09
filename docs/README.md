@@ -1,8 +1,10 @@
-# SM2/SM3 TypeScript 实现项目 - 文档导航
+# SM2/SM3/SM4 TypeScript 实现项目 - 文档导航
 
 ## 📚 文档概览
 
-本项目旨在使用 TypeScript 一比一复刻 Bouncy Castle Java (bc-java) 中的 SM2 和 SM3 算法实现。
+本项目旨在使用 TypeScript 一比一复刻 Bouncy Castle Java (bc-java) 中的 SM2、SM3、SM4 和 ZUC 算法实现。
+
+> 💡 **提示**: 本文档最后更新于 2025-12-08。已完成的实现报告和过时的指南已移至 [archive/](./archive/) 目录。
 
 ## 📖 文档列表
 
@@ -110,20 +112,41 @@
 - **TDD 工作流指南**
 - **Git 工作流和提交规范**
 
+### 8. [实现者快速指南](./QUICK_START_GUIDE_FOR_IMPLEMENTERS.md) 📋
+- 面向贡献者的快速参考指南
+- 代码结构和最佳实践
+- 开发工作流程
 
-- **环境准备**
-  - Node.js, TypeScript 配置
-  - Java + GraalVM 配置（互操作测试用）
-- **项目初始化步骤**
-  - 目录结构创建
-  - 依赖安装
-  - 配置文件设置
-- **第一个实现：Pack 工具类**
-  - 完整源码
-  - 完整测试代码
-  - 运行测试的命令
-- **TDD 工作流指南**
-- **Git 工作流和提交规范**
+### 9. [BC Java 特性对比](./bc-java-feature-comparison.md) 📊
+- 与 Bouncy Castle Java 的功能对比
+- 已实现功能清单
+- 待实现功能规划
+
+### 10. [项目规划总结](./PROJECT_PLANNING_SUMMARY.md) 🗺️
+- 整体项目规划
+- 模块需求说明
+- 实施路线图
+
+### 11. [Phase 3 实现总结](./PHASE3_IMPLEMENTATION_SUMMARY.md) 🆕
+- ZUC 流密码实现总结
+- 生产就绪状态
+- 与 BC Java 兼容性验证
+
+### 12. [Java 测试增强计划](./java-test-enhancement-plan.md) 🧪
+- 未来测试增强规划
+- 测试框架改进建议
+
+### 13. [Java 测试执行指南](./java-test-execution-guide.md) 🔧
+- 如何运行 Java 互操作测试
+- 环境配置和故障排除
+
+### 14. [GitHub Actions 日常测试](./github-actions-daily-test.md) 🤖
+- CI/CD 配置说明
+- 自动化测试流程
+
+### 15. [椭圆曲线实现计划](./ec-implementation-plan.md) 📐
+- EC 算法实现规划
+- 技术细节和架构
 
 ## 🚀 快速导航
 
@@ -142,58 +165,21 @@
 2. 理解两阶段测试的设计理念
 3. 查看具体的测试代码示例
 
-## 📊 项目进度追踪
+## 📊 项目实现状态
 
-### Phase 1: 基础设施（第 1-2 周）
-- [ ] 项目初始化
-- [ ] Pack 工具类 + 测试
-- [ ] Arrays 工具类 + 测试
-- [ ] Bytes 工具类 + 测试
-- [ ] BigIntegers 工具类 + 测试
-- [ ] 异常类 + 测试
+### ✅ 已完成的主要功能
 
-### Phase 2: SM3 实现（第 3 周）
-- [ ] Digest 接口
-- [ ] GeneralDigest 抽象类
-- [ ] SM3Digest 实现
-- [ ] SM3 单元测试
-- [ ] SM3 标准向量测试
+- **SM3 消息摘要算法** - 完全实现，包含 HMAC-SM3
+- **SM2 椭圆曲线算法** - 数字签名、公钥加密、密钥交换
+- **SM4 分组密码算法** - 支持 ECB、CBC、CTR、GCM 等多种模式
+- **ZUC 流密码算法** - ZUC-128/256 及其 MAC 变体
+- **X.509 PKI 支持** - 证书生成、解析、验证
+- **PEM/PKCS#8** - 密钥编码和解析
+- **完整测试套件** - 1077+ 测试用例，包括跨语言互操作测试
 
-### Phase 3: 椭圆曲线基础（第 4-5 周）
-- [ ] 有限域运算
-- [ ] ECFieldElement
-- [ ] ECPoint
-- [ ] ECCurve
-- [ ] ECMultiplier
-- [ ] ECAlgorithms
-- [ ] EC 参数类
+### 📦 当前版本: v0.4.0
 
-### Phase 4: SM2 签名（第 6 周）
-- [ ] DSAEncoding
-- [ ] DSAKCalculator
-- [ ] SM2Signer
-- [ ] 签名验签自闭环测试
-
-### Phase 5: SM2 加密（第 7 周）
-- [ ] SM2Engine
-- [ ] KDF 实现
-- [ ] 加密解密自闭环测试
-
-### Phase 6: SM2 密钥交换（第 8 周）
-- [ ] SM2KeyExchange
-- [ ] 密钥协商自闭环测试
-
-### Phase 7: GraalVM 互操作（第 9 周）
-- [ ] 打包 JS bundle
-- [ ] Java 测试项目
-- [ ] 跨语言签名测试
-- [ ] 跨语言加密测试
-- [ ] 跨语言密钥交换测试
-
-### Phase 8: 完善发布（第 10 周）
-- [ ] 性能优化
-- [ ] 文档完善
-- [ ] 发布准备
+查看 [CHANGELOG.md](../CHANGELOG.md) 了解详细的版本历史。
 
 ## 🎯 核心设计决策
 
@@ -256,6 +242,17 @@ src/
 - [draft-shen-sm2-ecdsa-02](https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02) - SM2 ECDSA
 - [draft-shen-sm3-hash-01](https://tools.ietf.org/html/draft-shen-sm3-hash-01) - SM3 Hash
 
+## 📁 文档归档
+
+历史文档和已完成工作的报告已移至 [archive/](./archive/) 目录，包括：
+
+- 阶段完成总结报告
+- 实现指南（已完成的功能）
+- 测试实现报告
+- README 改进报告
+
+这些文档保留用于历史参考，但不再是活跃维护的文档。
+
 ## 💡 最佳实践
 
 ### 编码实践
@@ -297,7 +294,13 @@ A:
 4. 提交 Pull Request
 5. 等待代码审查
 
-## 📝 变更日志
+## 📝 文档变更日志
+
+### 2025-12-08
+- 整理和归档过时文档
+- 将完成的工作报告移至 archive/ 目录
+- 更新文档导航以反映当前项目状态
+- 更新项目概览（SM2/SM3/SM4/ZUC 已实现）
 
 ### 2025-10-31
 - 创建项目文档结构
